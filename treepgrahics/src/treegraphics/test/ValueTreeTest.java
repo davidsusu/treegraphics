@@ -1,6 +1,8 @@
 package treegraphics.test;
 
 import treegraphics.valuetree.*;
+import treegraphics.valuetree.value.PairAverageValue;
+import treegraphics.valuetree.value.StaticValue;
 
 public class ValueTreeTest {
 	
@@ -8,9 +10,9 @@ public class ValueTreeTest {
 		StaticValue source1 = new StaticValue(10);
 		StaticValue source2 = new StaticValue(20);
 		
-		Value target1 = new AverageValue(source1, source2);
+		Value target1 = new PairAverageValue(source1, source2);
 
-		Value target2 = new AverageValue(target1, source2);
+		Value target2 = new PairAverageValue(target1, source2);
 
 		System.out.println(source1.get());
 		System.out.println(source2.get());
@@ -26,30 +28,4 @@ public class ValueTreeTest {
 		System.out.println(target2.get());
 	}
 
-	public static class AverageValue extends AbstractValue {
-		
-		final Value source1;
-		
-		final Value source2;
-		
-		public AverageValue(Value source1, Value source2) {
-			this.source1 = source1;
-			this.source2 = source2;
-			source1.registerDependent(this);
-			source2.registerDependent(this);
-		}
-
-		@Override
-		protected void reload() {
-			cachedValue = (source1.get()+source2.get())/2;
-		}
-
-		@Override
-		public void freeFromDependecies() {
-			source1.unregisterDependent(this);
-			source2.unregisterDependent(this);
-		}
-		
-	}
-	
 }

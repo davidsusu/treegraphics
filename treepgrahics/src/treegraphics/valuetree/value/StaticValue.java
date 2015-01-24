@@ -1,4 +1,6 @@
-package treegraphics.valuetree;
+package treegraphics.valuetree.value;
+
+import treegraphics.valuetree.AbstractValue;
 
 public class StaticValue extends AbstractValue {
 	
