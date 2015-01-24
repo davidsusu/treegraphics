@@ -51,16 +51,20 @@ public class WeightedAverageValue extends AbstractValue {
 
 	public static class Entry {
 
+		protected final Value source;
+
 		protected final double weight;
 		
-		protected final Value source;
-		
-		public Entry(double weight, Value source) {
+		public Entry(Value source) {
+			this(source, 1);
+		}
+
+		public Entry(Value source, double weight) {
 			if (weight<=0) {
 				throw new RuntimeException("Weight must be greater than zero");
 			}
-			this.weight = weight;
 			this.source = source;
+			this.weight = weight;
 		}
 		
 	}

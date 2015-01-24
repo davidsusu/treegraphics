@@ -32,8 +32,8 @@ public class ValueTreeTest {
 		source2.set(7);
 
 		Value target3 = new WeightedAverageValue(
-			new WeightedAverageValue.Entry(1, source1),
-			new WeightedAverageValue.Entry(2, source2)
+			new WeightedAverageValue.Entry(source1, 1),
+			new WeightedAverageValue.Entry(source2, 2)
 		);
 		
 		System.out.println(target3.get());
