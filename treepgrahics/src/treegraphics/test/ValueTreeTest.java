@@ -32,7 +32,7 @@ public class ValueTreeTest {
 		source2.set(7);
 
 		Value target3 = new WeightedAverageValue(
-			new WeightedAverageValue.Entry(source1, 1),
+			new WeightedAverageValue.Entry(source1),
 			new WeightedAverageValue.Entry(source2, 2)
 		);
 		
