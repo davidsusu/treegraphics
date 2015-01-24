@@ -32,15 +32,15 @@ public class TripleAverageValue extends AbstractValue {
 	}
 
 	@Override
-	protected void reload() {
-		cachedValue = (source1.get()+source2.get()+source3.get())/3;
-	}
-
-	@Override
 	public void freeFromDependecies() {
 		source1.unregisterDependent(this);
 		source2.unregisterDependent(this);
 		source3.unregisterDependent(this);
 	}
-	
+
+	@Override
+	protected void reload() {
+		cachedValue = (source1.get()+source2.get()+source3.get())/3;
+	}
+
 }

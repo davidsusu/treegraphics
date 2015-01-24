@@ -27,14 +27,14 @@ public class PairAverageValue extends AbstractValue {
 	}
 
 	@Override
-	protected void reload() {
-		cachedValue = (source1.get()+source2.get())/2;
-	}
-
-	@Override
 	public void freeFromDependecies() {
 		source1.unregisterDependent(this);
 		source2.unregisterDependent(this);
 	}
-	
+
+	@Override
+	protected void reload() {
+		cachedValue = (source1.get()+source2.get())/2;
+	}
+
 }

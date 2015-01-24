@@ -16,13 +16,13 @@ public class StaticValue extends AbstractValue {
 	}
 	
 	@Override
+	public void freeFromDependecies() {
+		// nothing to do
+	}
+
+	@Override
 	protected void reload() {
 		cachedValue = value;
 	}
 
-	@Override
-	public void freeFromDependecies() {
-		// nothing to do
-	}
-	
 }

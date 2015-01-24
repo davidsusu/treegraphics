@@ -31,6 +31,13 @@ public class AverageValue extends AbstractValue {
 	}
 	
 	@Override
+	public void freeFromDependecies() {
+		for (Value source: sources) {
+			source.unregisterDependent(this);
+		}
+	}
+
+	@Override
 	protected void reload() {
 		double sum = 0;
 		for (Value source: sources) {
@@ -39,11 +46,4 @@ public class AverageValue extends AbstractValue {
 		cachedValue = sum/sources.size();
 	}
 
-	@Override
-	public void freeFromDependecies() {
-		for (Value source: sources) {
-			source.unregisterDependent(this);
-		}
-	}
-	
 }
