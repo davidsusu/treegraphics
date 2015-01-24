@@ -3,6 +3,7 @@ package treegraphics.test;
 import treegraphics.valuetree.*;
 import treegraphics.valuetree.value.PairAverageValue;
 import treegraphics.valuetree.value.StaticValue;
+import treegraphics.valuetree.value.WeightedAverageValue;
 
 public class ValueTreeTest {
 	
@@ -26,6 +27,16 @@ public class ValueTreeTest {
 		System.out.println(source2.get());
 		System.out.println(target1.get());
 		System.out.println(target2.get());
+
+		System.out.println("---------------");
+		source2.set(7);
+
+		Value target3 = new WeightedAverageValue(
+			new WeightedAverageValue.Entry(1, source1),
+			new WeightedAverageValue.Entry(2, source2)
+		);
+		
+		System.out.println(target3.get());
 	}
 
 }
