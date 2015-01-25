@@ -9,9 +9,9 @@ public interface IndexedStore<T> {
 	
 	public void removeIndex(String indexName);
 	
-	public void hasIndex(String indexName);
+	public boolean hasIndex(String indexName);
 	
-	public void hasIndex(Comparator<T> comparator);
+	public boolean hasIndex(Comparator<T> comparator);
 	
 	public void addItem(T item);
 	
