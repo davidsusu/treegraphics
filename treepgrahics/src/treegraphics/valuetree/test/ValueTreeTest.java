@@ -1,4 +1,4 @@
-package treegraphics.test;
+package treegraphics.valuetree.test;
 
 import treegraphics.valuetree.*;
 import treegraphics.valuetree.value.PairAverageValue;
