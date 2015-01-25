@@ -1,10 +1,12 @@
 package treegraphics.indexedstore;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+//import java.util.NavigableSet;
 import java.util.TreeSet;
 
 public class DefaultIndexedStore<T> implements IndexedStore<T> {
@@ -73,7 +75,7 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 
 	@Override
 	public List<T> getAll(String orderIndexName) {
-		if (hasIndex(orderIndexName)) {
+		if (!hasIndex(orderIndexName)) {
 			return new ArrayList<T>();
 		}
 		return new ArrayList<T>(itemSetMap.get(orderIndexName));
@@ -81,21 +83,39 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 
 	@Override
 	public List<T> getFiltered(String filterIndexName, T fromItem, T toItem) {
-		if (hasIndex(filterIndexName)) {
-			return new ArrayList<T>();
-		}
-		return new ArrayList<T>(itemSetMap.get(filterIndexName).subSet(fromItem, toItem));
+		return new ArrayList<T>(getFilteredCollection(filterIndexName, fromItem, toItem));
 	}
 
 	@Override
 	public List<T> getFiltered(String filterIndexName, T fromItem, T toItem, String orderIndexName) {
-		if (hasIndex(filterIndexName)) {
+		if (!hasIndex(filterIndexName)) {
 			return new ArrayList<T>();
 		}
-		@SuppressWarnings("unchecked")
-		TreeSet<T> orderedResult = (TreeSet<T>)itemSetMap.get(orderIndexName).clone();
-		orderedResult.retainAll(itemSetMap.get(filterIndexName).subSet(fromItem, toItem));
-		return new ArrayList<T>(orderedResult);
+		ArrayList<T> orderedResult = new ArrayList<T>(itemSetMap.get(orderIndexName));
+		
+		// ???: (FIXME: not contains its own item?)
+		//System.out.println(getFilteredCollection(filterIndexName, fromItem, toItem).contains(((NavigableSet<T>)getFilteredCollection(filterIndexName, fromItem, toItem)).first()));
+		
+		//orderedResult.retainAll(getFilteredCollection(filterIndexName, fromItem, toItem));
+		
+		orderedResult.retainAll(new ArrayList<T>(getFilteredCollection(filterIndexName, fromItem, toItem)));
+		return orderedResult;
+	}
+	
+	protected Collection<T> getFilteredCollection(String filterIndexName, T fromItem, T toItem) {
+		if (!hasIndex(filterIndexName)) {
+			return new ArrayList<T>();
+		}
+		TreeSet<T> itemSet = itemSetMap.get(filterIndexName);
+		if (fromItem==null && toItem==null) {
+			return itemSet;
+		} else if (fromItem==null) {
+			return itemSet.headSet(toItem);
+		} else if (toItem==null) {
+			return itemSet.tailSet(fromItem);
+		} else {
+			return itemSet.subSet(fromItem, toItem);
+		}
 	}
 	
 	// FIXME..
