@@ -1,4 +1,4 @@
-package canvas.test;
+package treegraphics.canvas.test;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import canvas.Canvas;
-import canvas.Color;
-import canvas.Dimension;
-import canvas.Drawable;
-import canvas.Point;
-import canvas.Rectangle;
+import treegraphics.canvas.Canvas;
+import treegraphics.canvas.Color;
+import treegraphics.canvas.Dimension;
+import treegraphics.canvas.Drawable;
+import treegraphics.canvas.Point;
+import treegraphics.canvas.Rectangle;
+
 
 public class SwingCanvasTest {
 

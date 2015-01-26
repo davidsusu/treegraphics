@@ -1,4 +1,4 @@
-package canvas;
+package treegraphics.canvas;
 
 public class Point {
 
