@@ -31,6 +31,9 @@ public class IndexedStoreTest {
 		
 		System.out.println("\n----------\n");
 		System.out.println(getViewportFiltered(areaStore, new Area(35, 5, 55, 65, 0)));
+		
+		System.out.println("\n----------\n");
+		System.out.println(getViewportFiltered(areaStore, new Area(5, 5, 25, 65, 0)));
 	}
 	
 	protected static List<Area> getViewportFiltered(IndexedStore<Area> areaStore, Area viewportArea) {
@@ -47,8 +50,12 @@ public class IndexedStoreTest {
 		return viewportFiltered;
 	}                                                                                    
 	
-	protected static class Area {
+	protected static class Area implements DefaultIndexedStore.Identified {
 
+		protected static int nextId = 1;
+		
+		public final int id;
+		
 		public final int left;
 
 		public final int top;
@@ -65,6 +72,13 @@ public class IndexedStoreTest {
 			this.right = right;
 			this.bottom = bottom;
 			this.number = number;
+			this.id = nextId;
+			nextId++;
+		}
+
+		@Override
+		public int getIdentifier() {
+			return id;
 		}
 		
 		@Override

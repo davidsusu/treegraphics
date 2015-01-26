@@ -91,14 +91,15 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 		if (!hasIndex(filterIndexName)) {
 			return new ArrayList<T>();
 		}
-		ArrayList<T> orderedResult = new ArrayList<T>(itemSetMap.get(orderIndexName));
 		
-		// ???: (FIXME: not contains its own item?)
-		//System.out.println(getFilteredCollection(filterIndexName, fromItem, toItem).contains(((NavigableSet<T>)getFilteredCollection(filterIndexName, fromItem, toItem)).first()));
+		ArrayList<T> orderedResult;
+		if (hasIndex(orderIndexName)) {
+			orderedResult = new ArrayList<T>(itemSetMap.get(orderIndexName));
+		} else {
+			orderedResult = new ArrayList<T>(items);
+		}
+		orderedResult.retainAll(getFilteredCollection(filterIndexName, fromItem, toItem));
 		
-		//orderedResult.retainAll(getFilteredCollection(filterIndexName, fromItem, toItem));
-		
-		orderedResult.retainAll(new ArrayList<T>(getFilteredCollection(filterIndexName, fromItem, toItem)));
 		return orderedResult;
 	}
 	
@@ -118,7 +119,6 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 		}
 	}
 	
-	// FIXME..
 	protected class MultiComparator implements Comparator<T> {
 		
 		protected Comparator<T> innerComparator;
@@ -131,10 +131,20 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 		public int compare(T item1, T item2) {
 			int result = innerComparator.compare(item1, item2);
 			if (result==0) {
-				result = -1;
+				if (item1 instanceof Identified && item2 instanceof Identified) {
+					result = Integer.compare(((Identified)item1).getIdentifier(), ((Identified)item2).getIdentifier());
+				} else {
+					result = Integer.compare(System.identityHashCode(item1), System.identityHashCode(item2));
+				}
 			}
 			return result;
 		}
+		
+	}
+	
+	public static interface Identified {
+		
+		public int getIdentifier();
 		
 	}
 
