@@ -31,6 +31,9 @@ public class IndexedStoreTest {
 		
 		System.out.println("\n----------\n");
 		System.out.println(getViewportFiltered(areaStore, new Area(35, 5, 55, 65, 0)));
+		
+		System.out.println("\n----------\n");
+		System.out.println(getViewportFiltered(areaStore, new Area(5, 5, 25, 55, 0)));
 	}
 	
 	protected static List<Area> getViewportFiltered(IndexedStore<Area> areaStore, Area viewportArea) {
