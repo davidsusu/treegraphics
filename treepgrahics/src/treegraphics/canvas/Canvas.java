@@ -12,6 +12,10 @@ public interface Canvas {
 	
 	public void resetTransform();
 	
+	public Point transformPoint(Point point);
+	
+	public Point transformBackPoint(Point point);
+	
 	public void setColor(Color color);
 	
 	public void fillRectangle(Rectangle rectangle);
