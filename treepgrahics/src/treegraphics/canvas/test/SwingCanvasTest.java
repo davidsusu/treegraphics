@@ -111,8 +111,13 @@ public class SwingCanvasTest {
 			
 			@Override
 			public void mouseClicked(MouseEvent ev) {
-				rectangleDrawables.add(new RectangleDrawable(new Rectangle(ev.getX()-100, ev.getY()-70, ev.getX()+100, ev.getY()+70), catcherColor));
-				mainPanel.repaint();
+				if (ev.getClickCount()>1) {
+					rectangleDrawables.clear();
+					mainPanel.repaint();
+				} else {
+					rectangleDrawables.add(new RectangleDrawable(new Rectangle(ev.getX()-100, ev.getY()-70, ev.getX()+100, ev.getY()+70), catcherColor));
+					mainPanel.repaint();
+				}
 			}
 		});
 		
