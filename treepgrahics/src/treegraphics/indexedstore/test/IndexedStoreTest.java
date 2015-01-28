@@ -6,6 +6,7 @@ import java.util.List;
 
 import treegraphics.indexedstore.DefaultIndexedStore;
 import treegraphics.indexedstore.IndexedStore;
+import treegraphics.util.Identified;
 
 public class IndexedStoreTest {
 
@@ -50,9 +51,7 @@ public class IndexedStoreTest {
 		return viewportFiltered;
 	}                                                                                    
 	
-	protected static class Area implements DefaultIndexedStore.Identified {
-
-		protected static int nextId = 1;
+	protected static class Area implements Identified {
 		
 		public final int id;
 		
@@ -72,8 +71,7 @@ public class IndexedStoreTest {
 			this.right = right;
 			this.bottom = bottom;
 			this.number = number;
-			this.id = nextId;
-			nextId++;
+			this.id = Identified.Id.getNext();
 		}
 
 		@Override

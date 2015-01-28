@@ -9,6 +9,8 @@ import java.util.Map;
 //import java.util.NavigableSet;
 import java.util.TreeSet;
 
+import treegraphics.util.MultiComparator;
+
 public class DefaultIndexedStore<T> implements IndexedStore<T> {
 
 	protected List<T> items = new ArrayList<T>();
@@ -22,7 +24,7 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 		if (hasIndex(indexName)) {
 			removeIndex(indexName);
 		}
-		Comparator<T> multiComparator = new MultiComparator(comparator);
+		Comparator<T> multiComparator = new MultiComparator<T>(comparator);
 		indexMap.put(indexName, multiComparator);
 		TreeSet<T> itemSet = new TreeSet<T>(multiComparator);
 		itemSet.addAll(items);
@@ -117,35 +119,6 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 		} else {
 			return itemSet.subSet(fromItem, toItem);
 		}
-	}
-	
-	protected class MultiComparator implements Comparator<T> {
-		
-		protected Comparator<T> innerComparator;
-		
-		public MultiComparator(Comparator<T> innerComparator) {
-			this.innerComparator = innerComparator;
-		}
-
-		@Override
-		public int compare(T item1, T item2) {
-			int result = innerComparator.compare(item1, item2);
-			if (result==0) {
-				if (item1 instanceof Identified && item2 instanceof Identified) {
-					result = Integer.compare(((Identified)item1).getIdentifier(), ((Identified)item2).getIdentifier());
-				} else {
-					result = Integer.compare(System.identityHashCode(item1), System.identityHashCode(item2));
-				}
-			}
-			return result;
-		}
-		
-	}
-	
-	public static interface Identified {
-		
-		public int getIdentifier();
-		
 	}
 
 }
