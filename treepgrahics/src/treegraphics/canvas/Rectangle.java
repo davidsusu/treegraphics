@@ -102,7 +102,7 @@ public class Rectangle {
 		double selfTop = getTop();
 		double selfRight = getRight();
 		double selfBottom = getBottom();
-		double otherLeft= other.getLeft();
+		double otherLeft = other.getLeft();
 		double otherTop = other.getTop();
 		double otherRight = other.getRight();
 		double otherBottom = other.getBottom();
