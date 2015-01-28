@@ -9,7 +9,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -21,6 +20,7 @@ import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
+import treegraphics.swingutil.Graphics2DCanvas;
 
 
 public class SwingCanvasTest {
@@ -50,7 +50,7 @@ public class SwingCanvasTest {
 			
 			@Override
 			protected void paintComponent(Graphics g) {
-				AwtCanvas canvas = new AwtCanvas((Graphics2D)g);
+				Graphics2DCanvas canvas = new Graphics2DCanvas((Graphics2D)g);
 				
 				int width = getWidth();
 				int height = getHeight();
@@ -173,75 +173,6 @@ public class SwingCanvasTest {
 		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
-	}
-	
-	protected static class AwtCanvas implements Canvas {
-
-		protected Graphics2D g2d;
-		
-		protected Point origin = new Point(0, 0);
-		
-		protected double zoom = 1;
-		
-		public AwtCanvas(Graphics2D g2d) {
-			this.g2d = g2d;
-		}
-
-		@Override
-		public void setOrigin(Point origin) {
-			this.origin = origin;
-			refreshTransform();
-		}
-
-		@Override
-		public Point getOrigin() {
-			return origin;
-		}
-
-		@Override
-		public void setZoom(double zoom) {
-			this.zoom = zoom;
-			refreshTransform();
-		}
-
-		@Override
-		public double getZoom() {
-			return zoom;
-		}
-
-		@Override
-		public void resetTransform() {
-			this.origin = new Point(0, 0);
-			this.zoom = 1;
-			g2d.setTransform(new AffineTransform());
-		}
-
-		@Override
-		public Point transformPoint(Point point) {
-			return new Point((point.getX()-origin.getX())*zoom, (point.getY()-origin.getY())*zoom);
-		}
-
-		@Override
-		public Point transformBackPoint(Point point) {
-			return new Point((point.getX()/zoom)+origin.getX(), (point.getY()/zoom)+origin.getY());
-		}
-		
-		protected void refreshTransform() {
-			g2d.setTransform(new AffineTransform());
-			g2d.translate(-origin.getX(), -origin.getY());
-			g2d.scale(zoom, zoom);
-		}
-		
-		@Override
-		public void setColor(Color color) {
-			g2d.setColor(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
-		}
-
-		@Override
-		public void fillRectangle(Rectangle rectangle) {
-			g2d.fillRect((int)rectangle.getLeft(), (int)rectangle.getTop(), (int)rectangle.getWidth(), (int)rectangle.getHeight());
-		}
-		
 	}
 	
 	protected static class RectangleDrawable implements Drawable {
