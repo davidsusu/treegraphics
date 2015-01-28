@@ -35,12 +35,13 @@ public class SimpleSwingViewport implements Viewport {
 			@Override
 			protected void paintComponent(Graphics g) {
 				Canvas canvas = new Graphics2DCanvas((Graphics2D)g);
+				
+				canvas.setColor(new Color(255, 255, 255));
+				canvas.fillRectangle(SimpleSwingViewport.this.getDisplayArea());
+				
 				canvas.setOrigin(origin);
 				canvas.setZoom(zoom);
 				canvas.setAntialiasing(true);
-				
-				canvas.setColor(new Color(255, 255, 255));
-				canvas.fillRectangle(SimpleSwingViewport.this.getArea());
 				
 				for (Drawable drawable: drawables) {
 					drawable.draw(canvas);
@@ -85,6 +86,11 @@ public class SimpleSwingViewport implements Viewport {
 	@Override
 	public int getHeight() {
 		return component.getHeight();
+	}
+
+	@Override
+	public Rectangle getDisplayArea() {
+		return new Rectangle(new Point(0, 0), new Point(getWidth(), getHeight()));
 	}
 	
 	@Override

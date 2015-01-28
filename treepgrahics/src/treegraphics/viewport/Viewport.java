@@ -22,6 +22,8 @@ public interface Viewport {
 
 	public int getHeight();
 
+	public Rectangle getDisplayArea();
+	
 	public Rectangle getArea();
 	
 	public void rebuild();
