@@ -1,6 +1,7 @@
 package treegraphics_swing;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 
 import treegraphics.canvas.Canvas;
@@ -64,6 +65,17 @@ public class Graphics2DCanvas implements Canvas {
 		g2d.translate(-origin.getX(), -origin.getY());
 		g2d.scale(zoom, zoom);
 	}
+
+	@Override
+	public void setAntialiasing(boolean enabled) {
+		if (enabled) {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		} else {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+		}
+	}
 	
 	@Override
 	public void setColor(Color color) {
@@ -73,6 +85,11 @@ public class Graphics2DCanvas implements Canvas {
 	@Override
 	public void fillRectangle(Rectangle rectangle) {
 		g2d.fillRect((int)rectangle.getLeft(), (int)rectangle.getTop(), (int)rectangle.getWidth(), (int)rectangle.getHeight());
+	}
+
+	@Override
+	public void drawLine(Point point1, Point point2) {
+		g2d.drawLine((int)point1.getX(), (int)point1.getY(), (int)point2.getX(), (int)point2.getY());
 	}
 	
 }

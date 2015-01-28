@@ -15,10 +15,14 @@ public interface Canvas {
 	public Point transformPoint(Point point);
 	
 	public Point transformBackPoint(Point point);
+
+	public void setAntialiasing(boolean enabled);
 	
 	public void setColor(Color color);
-	
+
 	public void fillRectangle(Rectangle rectangle);
+
+	public void drawLine(Point point1, Point point2);
 	
 	// TODO
 	

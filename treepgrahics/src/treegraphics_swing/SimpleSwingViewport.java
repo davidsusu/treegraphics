@@ -2,8 +2,8 @@ package treegraphics_swing;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -19,7 +19,7 @@ public class SimpleSwingViewport implements Viewport {
 	
 	protected final JPanel panel;
 	
-	Set<Drawable> drawables = new HashSet<Drawable>();
+	List<Drawable> drawables = new ArrayList<Drawable>();
 	
 	public SimpleSwingViewport() {
 		this.panel = new JPanel() {
@@ -29,6 +29,8 @@ public class SimpleSwingViewport implements Viewport {
 			@Override
 			protected void paintComponent(Graphics g) {
 				Canvas canvas = new Graphics2DCanvas((Graphics2D)g);
+				
+				canvas.setAntialiasing(true);
 				
 				canvas.setColor(new Color(255, 255, 255));
 				canvas.fillRectangle(new Rectangle(new Point(0, 0), new Dimension(getWidth(), getHeight())));
@@ -47,29 +49,22 @@ public class SimpleSwingViewport implements Viewport {
 	}
 	
 	public void addDrawable(Drawable drawable) {
-		drawables.add(drawable);
+		if (!drawables.contains(drawable)) {
+			drawables.add(drawable);
+		}
 	}
 	
 	public void removeDrawable(Drawable drawable) {
 		drawables.remove(drawable);
 	}
 	
-	public void setX(int x) {
+	public void setOrigin(Point point) {
 		// TODO
 	}
 
-	public int getX() {
+	public Point getOrigin() {
 		// TODO
-		return 0;
-	}
-	
-	public void setY(int x) {
-		// TODO
-	}
-
-	public int getY() {
-		// TODO
-		return 0;
+		return new Point(0, 0);
 	}
 	
 	public int getWidth() {

@@ -1,6 +1,7 @@
 package treegraphics.viewport;
 
 import treegraphics.canvas.Drawable;
+import treegraphics.canvas.Point;
 
 public interface Viewport {
 
@@ -8,13 +9,9 @@ public interface Viewport {
 	
 	public void removeDrawable(Drawable drawable);
 
-	public void setX(int x);
+	public void setOrigin(Point point);
 
-	public int getX();
-
-	public void setY(int y);
-
-	public int getY();
+	public Point getOrigin();
 	
 	public void setZoom(double zoom);
 	

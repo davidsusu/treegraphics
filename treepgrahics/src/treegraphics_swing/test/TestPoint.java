@@ -9,7 +9,7 @@ import treegraphics.canvas.Rectangle;
 import treegraphics.util.Identified;
 import treegraphics.valuetree.Value;
 
-public class TestDrawable implements Drawable, Identified {
+public class TestPoint implements Drawable, Identified {
 	
 	final protected int id;
 	
@@ -21,7 +21,7 @@ public class TestDrawable implements Drawable, Identified {
 	
 	protected Color color;
 	
-	public TestDrawable(Value xValue, Value yValue, double radius, Color color) {
+	public TestPoint(Value xValue, Value yValue, double radius, Color color) {
 		this.xValue = xValue;
 		this.yValue = yValue;
 		this.radius = radius;
