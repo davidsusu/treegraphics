@@ -98,7 +98,7 @@ public class Rectangle {
 	}
 	
 	public boolean intersects(Rectangle other) {
-		double selfLeft= getLeft();
+		double selfLeft = getLeft();
 		double selfTop = getTop();
 		double selfRight = getRight();
 		double selfBottom = getBottom();
