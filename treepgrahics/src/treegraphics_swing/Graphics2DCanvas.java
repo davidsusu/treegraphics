@@ -62,8 +62,8 @@ public class Graphics2DCanvas implements Canvas {
 	
 	protected void refreshTransform() {
 		g2d.setTransform(new AffineTransform());
-		g2d.translate(-origin.getX(), -origin.getY());
 		g2d.scale(zoom, zoom);
+		g2d.translate(-origin.getX(), -origin.getY());
 	}
 
 	@Override

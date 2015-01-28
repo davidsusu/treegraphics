@@ -1,0 +1,109 @@
+package treegraphics_swing;
+
+import java.awt.Component;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+
+import treegraphics.canvas.Point;
+
+public class InteractionHandler {
+	
+	protected final SimpleSwingViewport viewport;
+	
+	protected final Component component;
+
+	protected java.awt.Point dragStartPosition = null;
+
+	protected Point dragStartOrigin = null;
+	
+	public InteractionHandler(SimpleSwingViewport viewport, Component component) {
+		this.component = component;
+		this.viewport = viewport;
+	}
+	
+	public void init() {
+
+		component.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent ev) {
+				if (ev.getButton()==MouseEvent.BUTTON1) {
+					dragStartPosition = null;
+					dragStartOrigin = null;
+				}
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent ev) {
+				if (ev.getButton()==MouseEvent.BUTTON1) {
+					dragStartPosition = new java.awt.Point(ev.getX(), ev.getY());
+					dragStartOrigin = viewport.getOrigin();
+				}
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent ev) {
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent ev) {
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent ev) {
+			}
+			
+		});
+		
+		component.addMouseMotionListener(new MouseMotionListener() {
+			
+			@Override
+			public void mouseMoved(MouseEvent ev) {
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent ev) {
+				if (dragStartPosition!=null && dragStartOrigin!=null) {
+					int mouseXDiff = ev.getX()-(int)dragStartPosition.getX();
+					int mouseYDiff = ev.getY()-(int)dragStartPosition.getY();
+					double zoom = viewport.getZoom();
+					double originXDiff = mouseXDiff/zoom;
+					double originYDiff = mouseYDiff/zoom;
+					Point newOrigin = new Point(dragStartOrigin.getX()-originXDiff, dragStartOrigin.getY()-originYDiff);
+					viewport.setOrigin(newOrigin);
+					viewport.rebuild();
+				}
+			}
+			
+		});
+		
+		component.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent ev) {
+				int mouseX = ev.getX();
+				int mouseY = ev.getY();
+				Point oldOrigin = viewport.getOrigin();
+				double rot = ev.getPreciseWheelRotation();
+				double oldZoom = viewport.getZoom();
+				double zoomScale = Math.pow(0.9, rot);
+				double newZoom = oldZoom*zoomScale;
+				double originXDiff = (mouseX/newZoom)-(mouseX/oldZoom);
+				double originYDiff = (mouseY/newZoom)-(mouseY/oldZoom);
+				Point newOrigin = new Point(oldOrigin.getX()-originXDiff, oldOrigin.getY()-originYDiff);
+				viewport.setZoom(newZoom);
+				viewport.setOrigin(newOrigin);
+				viewport.rebuild();
+				if (dragStartPosition!=null && dragStartOrigin!=null) {
+					dragStartPosition = new java.awt.Point(ev.getX(), ev.getY());
+					dragStartOrigin = viewport.getOrigin();
+				}
+			}
+		});
+		
+	}
+	
+}

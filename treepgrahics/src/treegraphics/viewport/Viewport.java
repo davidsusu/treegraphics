@@ -2,6 +2,7 @@ package treegraphics.viewport;
 
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
+import treegraphics.canvas.Rectangle;
 
 public interface Viewport {
 
@@ -9,7 +10,7 @@ public interface Viewport {
 	
 	public void removeDrawable(Drawable drawable);
 
-	public void setOrigin(Point point);
+	public void setOrigin(Point origin);
 
 	public Point getOrigin();
 	
@@ -20,6 +21,8 @@ public interface Viewport {
 	public int getWidth();
 
 	public int getHeight();
+
+	public Rectangle getArea();
 	
 	public void rebuild();
 	

@@ -1,11 +1,11 @@
 package treegraphics_swing.test;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import treegraphics.canvas.Color;
 import treegraphics.valuetree.Value;
@@ -13,7 +13,7 @@ import treegraphics.valuetree.value.AverageValue;
 import treegraphics.valuetree.value.StaticValue;
 import treegraphics_swing.SimpleSwingViewport;
 
-public class ViewportTest {
+public class ViewportTest1 {
 	
 	public static void main(String[] args) {
 		SimpleSwingViewport viewport = new SimpleSwingViewport();
@@ -51,7 +51,7 @@ public class ViewportTest {
 
 		viewport.addDrawable(new TestPoint(valueX3, valueY3, 10, new Color(0, 0, 255)));
 		
-		final JPanel panel = viewport.getPanel();
+		final Component panel = viewport.getComponent();
 		panel.setPreferredSize(new java.awt.Dimension(800, 500));
 		
 		panel.addMouseMotionListener(new MouseMotionListener() {

@@ -1,5 +1,6 @@
 package treegraphics_swing;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -17,23 +18,29 @@ import treegraphics.viewport.Viewport;
 
 public class SimpleSwingViewport implements Viewport {
 	
-	protected final JPanel panel;
+	protected final Component component;
 	
-	List<Drawable> drawables = new ArrayList<Drawable>();
+	protected List<Drawable> drawables = new ArrayList<Drawable>();
+	
+	protected Point origin = new Point(0, 0);
+	
+	protected double zoom = 1;
 	
 	public SimpleSwingViewport() {
-		this.panel = new JPanel() {
+		// FIXME
+		this.component = new JPanel() {
 			
 			public static final long serialVersionUID = 1L;
 			
 			@Override
 			protected void paintComponent(Graphics g) {
 				Canvas canvas = new Graphics2DCanvas((Graphics2D)g);
-				
+				canvas.setOrigin(origin);
+				canvas.setZoom(zoom);
 				canvas.setAntialiasing(true);
 				
 				canvas.setColor(new Color(255, 255, 255));
-				canvas.fillRectangle(new Rectangle(new Point(0, 0), new Dimension(getWidth(), getHeight())));
+				canvas.fillRectangle(SimpleSwingViewport.this.getArea());
 				
 				for (Drawable drawable: drawables) {
 					drawable.draw(canvas);
@@ -44,52 +51,67 @@ public class SimpleSwingViewport implements Viewport {
 	}
 	
 	// FIXME
-	public JPanel getPanel() {
-		return panel;
+	public Component getComponent() {
+		return component;
 	}
 	
+	@Override
 	public void addDrawable(Drawable drawable) {
 		if (!drawables.contains(drawable)) {
 			drawables.add(drawable);
 		}
 	}
-	
+
+	@Override
 	public void removeDrawable(Drawable drawable) {
 		drawables.remove(drawable);
 	}
-	
-	public void setOrigin(Point point) {
-		// TODO
+
+	@Override
+	public void setOrigin(Point origin) {
+		this.origin = origin;
 	}
 
+	@Override
 	public Point getOrigin() {
-		// TODO
-		return new Point(0, 0);
+		return origin;
 	}
-	
+
+	@Override
 	public int getWidth() {
-		return panel.getWidth();
+		return component.getWidth();
 	}
-	
+
+	@Override
 	public int getHeight() {
-		return panel.getHeight();
+		return component.getHeight();
 	}
 	
+	@Override
+	public Rectangle getArea() {
+		Dimension dimension = new Dimension(component.getWidth()/zoom, component.getHeight()/zoom);
+		return new Rectangle(origin, dimension);
+	}
+	
+	@Override
 	public void setZoom(double zoom) {
-		// TODO: modify zoom with no rebuild (scale current bitmap)
+		this.zoom = zoom;
 	}
-	
+
+	@Override
 	public double getZoom() {
-		// TODO
-		return 0;
+		return zoom;
 	}
-	
+
+	@Override
 	public void rebuild() {
 		// TODO: rebuild bitmap, and if necessary then additionally rebuild the active area of the DrawableService
+		refresh();
 	}
-	
+
+	@Override
 	public void refresh() {
-		panel.repaint();
+		component.repaint();
 	}
 	
 }
