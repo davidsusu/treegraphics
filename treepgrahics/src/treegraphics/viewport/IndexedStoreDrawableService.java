@@ -3,7 +3,6 @@ package treegraphics.viewport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 import treegraphics.canvas.Canvas;
