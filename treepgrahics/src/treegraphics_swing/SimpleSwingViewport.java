@@ -15,13 +15,15 @@ import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
+import treegraphics.viewport.DrawableService;
+import treegraphics.viewport.IndexedStoreDrawableService;
 import treegraphics.viewport.Viewport;
 
 public class SimpleSwingViewport implements Viewport {
 	
 	protected final Component component;
 	
-	protected List<Drawable> drawables = new ArrayList<Drawable>();
+	protected DrawableService drawableService = new IndexedStoreDrawableService();
 	
 	protected Point origin = new Point(0, 0);
 	
@@ -41,10 +43,12 @@ public class SimpleSwingViewport implements Viewport {
 				canvas.setZoom(zoom);
 				canvas.setAntialiasing(true);
 
-				canvas.setColor(new Color(255, 255, 255));
-				canvas.fillRectangle(SimpleSwingViewport.this.getArea());
+				Rectangle area = SimpleSwingViewport.this.getArea();
 				
-				for (Drawable drawable: drawables) {
+				canvas.setColor(new Color(255, 255, 255));
+				canvas.fillRectangle(area);
+				
+				for (Drawable drawable: drawableService.getAffectedDrawables(area)) {
 					drawable.draw(canvas);
 				}
 			}
@@ -59,14 +63,12 @@ public class SimpleSwingViewport implements Viewport {
 	
 	@Override
 	public void addDrawable(Drawable drawable) {
-		if (!drawables.contains(drawable)) {
-			drawables.add(drawable);
-		}
+		drawableService.addDrawable(drawable);
 	}
 
 	@Override
 	public void removeDrawable(Drawable drawable) {
-		drawables.remove(drawable);
+		drawableService.removeDrawable(drawable);
 	}
 
 	@Override
@@ -117,12 +119,7 @@ public class SimpleSwingViewport implements Viewport {
 	}
 
 	public List<Drawable> getDrawablesAt(Point point) {
-		List<Drawable> drawablesAt = new ArrayList<Drawable>();
-		for (Drawable drawable: drawables) {
-			if (drawable.isPointDominated(point)) {
-				drawablesAt.add(drawable);
-			}
-		}
+		List<Drawable> drawablesAt = new ArrayList<Drawable>(drawableService.getAffectedDrawables(point));
 		Collections.reverse(drawablesAt);
 		return drawablesAt;
 	}

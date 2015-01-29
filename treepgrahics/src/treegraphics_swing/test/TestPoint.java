@@ -17,14 +17,17 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	protected Value xValue;
 	
 	protected Value yValue;
+
+	protected Value zValue;
 	
 	protected double radius;
 	
 	protected Color color;
 	
-	public TestPoint(Value xValue, Value yValue, double radius, Color color) {
+	public TestPoint(Value xValue, Value yValue, Value zValue, double radius, Color color) {
 		this.xValue = xValue;
 		this.yValue = yValue;
+		this.zValue = zValue;
 		this.radius = radius;
 		this.color = color;
 		this.id = Identified.Id.getNext();
@@ -36,6 +39,11 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 		canvas.fillRectangle(getReservedRectangle());
 	}
 
+	@Override
+	public double getZ() {
+		return zValue.get();
+	}
+	
 	@Override
 	public Rectangle getReservedRectangle() {
 		return new Rectangle(new Point(xValue.get()-radius, yValue.get()-radius), new Dimension(radius*2, radius*2));

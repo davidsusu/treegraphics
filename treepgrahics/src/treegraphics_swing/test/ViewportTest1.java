@@ -33,23 +33,23 @@ public class ViewportTest1 {
 		final Value valueX7 = new AverageValue(valueX2, valueX3);
 		final Value valueY7 = new AverageValue(valueY2, valueY3);
 
-		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX2, valueY2, new Color(0, 0, 0)));
-		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX3, valueY3, new Color(0, 0, 0)));
-		viewport.addDrawable(new TestLine(valueX2, valueY2, valueX3, valueY3, new Color(0, 0, 0)));
-		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX7, valueY7, new Color(0, 0, 0)));
-		viewport.addDrawable(new TestLine(valueX2, valueY2, valueX6, valueY6, new Color(0, 0, 0)));
-		viewport.addDrawable(new TestLine(valueX3, valueY3, valueX5, valueY5, new Color(0, 0, 0)));
+		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX2, valueY2, new StaticValue(1), new Color(0, 0, 0)));
+		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX3, valueY3, new StaticValue(2), new Color(0, 0, 0)));
+		viewport.addDrawable(new TestLine(valueX2, valueY2, valueX3, valueY3, new StaticValue(3), new Color(0, 0, 0)));
+		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX7, valueY7, new StaticValue(4), new Color(0, 0, 0)));
+		viewport.addDrawable(new TestLine(valueX2, valueY2, valueX6, valueY6, new StaticValue(5), new Color(0, 0, 0)));
+		viewport.addDrawable(new TestLine(valueX3, valueY3, valueX5, valueY5, new StaticValue(6), new Color(0, 0, 0)));
 		
-		viewport.addDrawable(new TestPoint(valueX1, valueY1, 10, new Color(255, 0, 0)));
-		viewport.addDrawable(new TestPoint(valueX2, valueY2, 10, new Color(0, 255, 0)));
-		viewport.addDrawable(new TestPoint(valueX5, valueY5, 10, new Color(255, 255, 0)));
+		viewport.addDrawable(new TestPoint(valueX1, valueY1, new StaticValue(7), 10, new Color(255, 0, 0)));
+		viewport.addDrawable(new TestPoint(valueX2, valueY2, new StaticValue(8), 10, new Color(0, 255, 0)));
+		viewport.addDrawable(new TestPoint(valueX5, valueY5, new StaticValue(9), 10, new Color(255, 255, 0)));
 
-		viewport.addDrawable(new TestPoint(valueX4, valueY4, 10, new Color(0, 0, 0)));
+		viewport.addDrawable(new TestPoint(valueX4, valueY4, new StaticValue(10), 10, new Color(0, 0, 0)));
 		
-		viewport.addDrawable(new TestPoint(valueX6, valueY6, 10, new Color(255, 0, 255)));
-		viewport.addDrawable(new TestPoint(valueX7, valueY7, 10, new Color(0, 255, 255)));
+		viewport.addDrawable(new TestPoint(valueX6, valueY6, new StaticValue(11), 10, new Color(255, 0, 255)));
+		viewport.addDrawable(new TestPoint(valueX7, valueY7, new StaticValue(12), 10, new Color(0, 255, 255)));
 
-		viewport.addDrawable(new TestPoint(valueX3, valueY3, 10, new Color(0, 0, 255)));
+		viewport.addDrawable(new TestPoint(valueX3, valueY3, new StaticValue(13), 10, new Color(0, 0, 255)));
 		
 		final Component panel = viewport.getComponent();
 		panel.setPreferredSize(new java.awt.Dimension(800, 500));

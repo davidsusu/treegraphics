@@ -21,13 +21,16 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 	
 	protected Value y2Value;
 	
+	protected Value zValue;
+	
 	protected Color color;
 	
-	public TestLine(Value x1Value, Value y1Value, Value x2Value, Value y2Value, Color color) {
+	public TestLine(Value x1Value, Value y1Value, Value x2Value, Value y2Value, Value zValue, Color color) {
 		this.x1Value = x1Value;
 		this.y1Value = y1Value;
 		this.x2Value = x2Value;
 		this.y2Value = y2Value;
+		this.zValue = zValue;
 		this.color = color;
 		this.id = Identified.Id.getNext();
 	}
@@ -38,6 +41,11 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 		canvas.drawLine(new Point(x1Value.get(), y1Value.get()), new Point(x2Value.get(), y2Value.get()));
 	}
 
+	@Override
+	public double getZ() {
+		return zValue.get();
+	}
+	
 	@Override
 	public Rectangle getReservedRectangle() {
 		return new Rectangle(new Point(x1Value.get(), y1Value.get()), new Point(x2Value.get(), y2Value.get()));
