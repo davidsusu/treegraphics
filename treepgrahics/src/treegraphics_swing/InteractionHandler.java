@@ -54,6 +54,7 @@ public class InteractionHandler {
 			
 			@Override
 			public void mouseClicked(MouseEvent ev) {
+				System.out.println(viewport.getDrawablesAtPixel(ev.getX(), ev.getY()));
 			}
 			
 		});

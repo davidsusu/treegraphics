@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.util.Collection;
 
 import treegraphics.canvas.Drawable;
+import treegraphics.canvas.Point;
 
 public interface DrawableService {
 
@@ -18,6 +19,8 @@ public interface DrawableService {
 	public Collection<Drawable> getDrawables();
 	
 	public Collection<Drawable> getAffectedDrawables(Rectangle area);
+	
+	public Collection<Drawable> getAffectedDrawables(Point point);
 	
 	// TODO
 	

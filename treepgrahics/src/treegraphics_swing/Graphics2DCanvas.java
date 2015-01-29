@@ -3,6 +3,7 @@ package treegraphics_swing;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
@@ -84,7 +85,7 @@ public class Graphics2DCanvas implements Canvas {
 
 	@Override
 	public void fillRectangle(Rectangle rectangle) {
-		g2d.fillRect((int)rectangle.getLeft(), (int)rectangle.getTop(), (int)rectangle.getWidth(), (int)rectangle.getHeight());
+		g2d.fill(new Rectangle2D.Double(rectangle.getLeft(), rectangle.getTop(), rectangle.getWidth(), rectangle.getHeight()));
 	}
 
 	@Override

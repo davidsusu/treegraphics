@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -36,12 +37,12 @@ public class SimpleSwingViewport implements Viewport {
 			protected void paintComponent(Graphics g) {
 				Canvas canvas = new Graphics2DCanvas((Graphics2D)g);
 				
-				canvas.setColor(new Color(255, 255, 255));
-				canvas.fillRectangle(SimpleSwingViewport.this.getDisplayArea());
-				
 				canvas.setOrigin(origin);
 				canvas.setZoom(zoom);
 				canvas.setAntialiasing(true);
+
+				canvas.setColor(new Color(255, 255, 255));
+				canvas.fillRectangle(SimpleSwingViewport.this.getArea());
 				
 				for (Drawable drawable: drawables) {
 					drawable.draw(canvas);
@@ -89,11 +90,6 @@ public class SimpleSwingViewport implements Viewport {
 	}
 
 	@Override
-	public Rectangle getDisplayArea() {
-		return new Rectangle(new Point(0, 0), new Point(getWidth(), getHeight()));
-	}
-	
-	@Override
 	public Rectangle getArea() {
 		Dimension dimension = new Dimension(component.getWidth()/zoom, component.getHeight()/zoom);
 		return new Rectangle(origin, dimension);
@@ -118,6 +114,22 @@ public class SimpleSwingViewport implements Viewport {
 	@Override
 	public void refresh() {
 		component.repaint();
+	}
+
+	public List<Drawable> getDrawablesAt(Point point) {
+		List<Drawable> drawablesAt = new ArrayList<Drawable>();
+		for (Drawable drawable: drawables) {
+			if (drawable.isPointDominated(point)) {
+				drawablesAt.add(drawable);
+			}
+		}
+		Collections.reverse(drawablesAt);
+		return drawablesAt;
+	}
+	
+	public List<Drawable> getDrawablesAtPixel(int x, int y) {
+		Point virtualPoint =  new Point(((x+0.5)/zoom)+origin.getX(), ((y+0.5)/zoom)+origin.getY());
+		return getDrawablesAt(virtualPoint);
 	}
 	
 }

@@ -41,6 +41,11 @@ public class TestPoint implements Drawable, Identified {
 	}
 	
 	@Override
+	public boolean isPointDominated(Point point) {
+		return getReservedRectangle().containsPoint(point);
+	}
+	
+	@Override
 	public int getIdentifier() {
 		return id;
 	}

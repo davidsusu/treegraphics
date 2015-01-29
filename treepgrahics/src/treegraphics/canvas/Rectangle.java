@@ -1,6 +1,6 @@
 package treegraphics.canvas;
 
-public class Rectangle {
+public class Rectangle implements Shape {
 
 	protected final Point point1;
 
@@ -27,6 +27,27 @@ public class Rectangle {
 	
 	public Point getPoint2() {
 		return point2;
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+		return this;
+	}
+
+	@Override
+	public boolean containsPoint(Point point) {
+		double selfLeft = getLeft();
+		double selfTop = getTop();
+		double selfRight = getRight();
+		double selfBottom = getBottom();
+		double pointX = point.getX();
+		double pointY = point.getY();
+		return (
+			pointX >= selfLeft
+			&& pointX <= selfRight
+			&& pointY >= selfTop
+			&& pointY <= selfBottom
+		);
 	}
 	
 	public Point getLeftTop() {

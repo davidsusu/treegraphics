@@ -6,4 +6,6 @@ public interface Drawable {
 	
 	public Rectangle getReservedRectangle();
 	
+	public boolean isPointDominated(Point point);
+	
 }

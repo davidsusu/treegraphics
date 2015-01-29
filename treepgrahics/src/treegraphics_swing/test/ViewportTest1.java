@@ -71,6 +71,7 @@ public class ViewportTest1 {
 		});
 		
 		JFrame frame = new JFrame("Viewport test");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);

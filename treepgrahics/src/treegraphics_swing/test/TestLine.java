@@ -41,6 +41,23 @@ public class TestLine implements Drawable, Identified {
 	public Rectangle getReservedRectangle() {
 		return new Rectangle(new Point(x1Value.get(), y1Value.get()), new Point(x2Value.get(), y2Value.get()));
 	}
+
+	@Override
+	public boolean isPointDominated(Point point) {
+		if (!getReservedRectangle().containsPoint(point)) {
+			return false;
+		}
+		double maxDistance = 0.5;
+		double x1 = x1Value.get();
+		double y1 = y1Value.get();
+		double x2 = x2Value.get();
+		double y2 = y2Value.get();
+		double xComp = y2-y1;
+		double yComp = x1-x2;
+		double cComp = (y1*(x2-x1))+(x1*(y1-y2));
+		double distance = Math.abs((xComp*point.getX())+(yComp*point.getY())+cComp)/Math.sqrt((xComp*xComp)+(yComp*yComp));
+		return (distance<=maxDistance);
+	}
 	
 	@Override
 	public int getIdentifier() {

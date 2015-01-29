@@ -32,6 +32,7 @@ public class ViewportTest2 {
 		interactionHandler.init();
 		
 		JFrame frame = new JFrame("Viewport test");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(component, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
