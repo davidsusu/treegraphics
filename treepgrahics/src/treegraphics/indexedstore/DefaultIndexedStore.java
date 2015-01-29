@@ -66,6 +66,21 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 	}
 
 	@Override
+	public void updateItem(T item) {
+		if (!hasItem(item)) {
+			return;
+		}
+		for (Map.Entry<String, TreeSet<T>> entry: itemSetMap.entrySet()) {
+			TreeSet<T> itemSet = entry.getValue();
+			// FIXME
+			//itemSet.remove(item);
+			//itemSet.add(item);
+			itemSet.clear();
+			itemSet.addAll(items);
+		}
+	}
+
+	@Override
 	public boolean hasItem(T item) {
 		return items.contains(item);
 	}

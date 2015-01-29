@@ -18,6 +18,8 @@ public interface IndexedStore<T> {
 	public void removeItem(T item);
 	
 	public boolean hasItem(T item);
+	
+	public void updateItem(T item);
 
 	public List<T> getAll();
 

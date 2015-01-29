@@ -52,15 +52,15 @@ public class IndexedStoreDrawableService implements DrawableService {
 
 	@Override
 	public Collection<Drawable> getAffectedDrawables(Rectangle area) {
-		List<Drawable> affectedDrawables = new ArrayList<Drawable>();
+		/*List<Drawable> affectedDrawables = new ArrayList<Drawable>();
 		for (Drawable drawable: store.getAll("z")) {
 			if (drawable.getReservedRectangle().intersects(area)) {
 				affectedDrawables.add(drawable);
 			}
 		}
-		return affectedDrawables;
+		return affectedDrawables;*/
 		
-		/*
+		
 		double areaLeft = area.getLeft();
 		double areaTop = area.getTop();
 		double areaRight = area.getRight();
@@ -76,7 +76,7 @@ public class IndexedStoreDrawableService implements DrawableService {
 		viewportFiltered.retainAll(leftFiltered);
 		viewportFiltered.retainAll(rightFiltered);
 		
-		return viewportFiltered;*/
+		return viewportFiltered;
 	}
 
 	@Override
@@ -220,10 +220,7 @@ public class IndexedStoreDrawableService implements DrawableService {
 	public void expireState(CachedState cachedState) {
 		if (cachedState instanceof Drawable) {
 			Drawable drawable = (Drawable)cachedState;
-			if (store.hasItem(drawable)) {
-				store.removeItem(drawable);
-				store.addItem(drawable);
-			}
+			store.updateItem(drawable);
 		}
 		expiredDependencies.add(cachedState);
 		expireState();
