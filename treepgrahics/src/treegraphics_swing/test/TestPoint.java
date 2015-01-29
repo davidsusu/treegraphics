@@ -1,11 +1,15 @@
 package treegraphics_swing.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
 import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
+import treegraphics.util.CachedState;
 import treegraphics.util.Identified;
 import treegraphics.valuetree.SourceValue;
 import treegraphics.valuetree.Value;
@@ -23,11 +27,20 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	protected double radius;
 	
 	protected Color color;
+
+	protected boolean isExpired = true;
+
+	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
+	
+	final protected List<CachedState> dependents = new ArrayList<CachedState>();
 	
 	public TestPoint(Value xValue, Value yValue, Value zValue, double radius, Color color) {
 		this.xValue = xValue;
 		this.yValue = yValue;
 		this.zValue = zValue;
+		this.xValue.registerDependent(this);
+		this.yValue.registerDependent(this);
+		this.zValue.registerDependent(this);
 		this.radius = radius;
 		this.color = color;
 		this.id = Identified.Id.getNext();
@@ -68,6 +81,45 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	@Override
 	public int getIdentifier() {
 		return id;
+	}
+
+	@Override
+	public void expireState() {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			dependent.expireState(this);
+		}
+	}
+
+	@Override
+	public void expireState(CachedState cachedState) {
+		expiredDependencies.add(cachedState);
+		expireState();
+	}
+
+	@Override
+	public void registerDependent(CachedState cachedState) {
+		// FIXME
+		if (!dependents.contains(cachedState)) {
+			dependents.add(cachedState);
+		}
+	}
+
+	@Override
+	public void unregisterDependent(CachedState cachedState) {
+		dependents.remove(cachedState);
+	}
+
+	@Override
+	public void freeFromDependecies() {
+		xValue.unregisterDependent(this);
+		yValue.unregisterDependent(this);
+		zValue.unregisterDependent(this);
+	}
+
+	@Override
+	public String toString() {
+		return "TestPoint("+xValue.get()+", "+yValue.get()+")";
 	}
 	
 }

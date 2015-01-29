@@ -1,6 +1,8 @@
 package treegraphics.canvas;
 
-public interface Drawable {
+import treegraphics.util.CachedState;
+
+public interface Drawable extends CachedState {
 	
 	public void draw(Canvas canvas);
 	

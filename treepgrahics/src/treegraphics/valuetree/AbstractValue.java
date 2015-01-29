@@ -3,6 +3,8 @@ package treegraphics.valuetree;
 import java.util.List;
 import java.util.ArrayList;
 
+import treegraphics.util.CachedState;
+
 abstract public class AbstractValue implements Value {
 
 	protected boolean isExpired = true;

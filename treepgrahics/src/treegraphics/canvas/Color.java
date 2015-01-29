@@ -43,6 +43,10 @@ public class Color {
 		return new Color(red, green, blue);
 	}
 	
+	@Override
+	public String toString() {
+		return "Color("+red+", "+green+", "+blue+(alpha<1?", "+alpha:"")+")";
+	}
 	// TODO: darken, negate, grayscale etc.
 	
 }

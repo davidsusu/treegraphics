@@ -3,6 +3,7 @@ package treegraphics.viewport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import treegraphics.canvas.Canvas;
@@ -11,11 +12,19 @@ import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 import treegraphics.indexedstore.DefaultIndexedStore;
 import treegraphics.indexedstore.IndexedStore;
+import treegraphics.util.CachedState;
 
-// TODO: currently NOT indexed...
 public class IndexedStoreDrawableService implements DrawableService {
 
-	IndexedStore<Drawable> store = new DefaultIndexedStore<Drawable>();
+	protected List<DrawableChangeListener> drawableChangeListeners = new ArrayList<DrawableChangeListener>();
+	
+	protected IndexedStore<Drawable> store = new DefaultIndexedStore<Drawable>();
+
+	protected boolean isExpired = true;
+
+	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
+	
+	final protected List<CachedState> dependents = new ArrayList<CachedState>();
 	
 	public IndexedStoreDrawableService() {
 		store.addIndex("top", new TopDrawableComparator());
@@ -28,11 +37,13 @@ public class IndexedStoreDrawableService implements DrawableService {
 	@Override
 	public void addDrawable(Drawable drawable) {
 		store.addItem(drawable);
+		drawable.registerDependent(this);
 	}
 
 	@Override
 	public void removeDrawable(Drawable drawable) {
 		store.removeItem(drawable);
+		drawable.unregisterDependent(this);
 	}
 
 	@Override
@@ -51,20 +62,16 @@ public class IndexedStoreDrawableService implements DrawableService {
 		return affectedDrawables;
 		
 		/*
-		// FIXME
 		double areaLeft = area.getLeft();
 		double areaTop = area.getTop();
 		double areaRight = area.getRight();
 		double areaBottom = area.getBottom();
 		
-		System.out.println(store.getFiltered("top", null, new FakeDrawable(new Point(0, areaBottom), new Point(10, areaBottom), 0), "z"));
-		System.out.println("----------");
-		
 		List<Drawable> topFiltered = store.getFiltered("top", null, new FakeDrawable(new Point(0, areaBottom), new Point(10, areaBottom+10), 0), "z");
 		List<Drawable> bottomFiltered = store.getFiltered("bottom", new FakeDrawable(new Point(0, areaTop-10), new Point(10, areaTop), 0), null);
 		List<Drawable> leftFiltered = store.getFiltered("left", null, new FakeDrawable(new Point(areaRight, 0), new Point(areaRight+10, 10), 0));
 		List<Drawable> rightFiltered = store.getFiltered("right", new FakeDrawable(new Point(areaLeft-10, 0), new Point(areaLeft, 10), 0), null);
-
+		
 		List<Drawable> viewportFiltered = new ArrayList<Drawable>(topFiltered);
 		viewportFiltered.retainAll(bottomFiltered);
 		viewportFiltered.retainAll(leftFiltered);
@@ -74,6 +81,7 @@ public class IndexedStoreDrawableService implements DrawableService {
 	}
 
 	@Override
+	// TODO: use index
 	public Collection<Drawable> getAffectedDrawables(Point point) {
 
 		List<Drawable> affectedDrawables = new ArrayList<Drawable>();
@@ -88,6 +96,14 @@ public class IndexedStoreDrawableService implements DrawableService {
 		// TODO
 		return store.getAll("z");
 		//return null;*/
+	}
+
+	public void addDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
+		drawableChangeListeners.add(drawableChangeListener);
+	}
+
+	public void removeDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
+		drawableChangeListeners.remove(drawableChangeListener);
 	}
 	
 	protected class LeftDrawableComparator implements Comparator<Drawable> {
@@ -165,7 +181,73 @@ public class IndexedStoreDrawableService implements DrawableService {
 		public boolean isPointDominated(Point point) {
 			return false;
 		}
+
+		@Override
+		public void expireState() {
+		}
+
+		@Override
+		public void expireState(CachedState cachedState) {
+		}
+
+		@Override
+		public void registerDependent(CachedState cachedState) {
+		}
+
+		@Override
+		public void unregisterDependent(CachedState cachedState) {
+		}
+
+		@Override
+		public void freeFromDependecies() {
+		}
 		
+		@Override
+		public String toString() {
+			return "FakeDrawable("+point1+"; "+point2+")";
+		}
+		
+	}
+
+	@Override
+	public void expireState() {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			dependent.expireState(this);
+		}
+	}
+
+	@Override
+	public void expireState(CachedState cachedState) {
+		if (cachedState instanceof Drawable) {
+			Drawable drawable = (Drawable)cachedState;
+			if (store.hasItem(drawable)) {
+				store.removeItem(drawable);
+				store.addItem(drawable);
+			}
+		}
+		expiredDependencies.add(cachedState);
+		expireState();
+	}
+
+	@Override
+	public void registerDependent(CachedState cachedState) {
+		// FIXME
+		if (!dependents.contains(cachedState)) {
+			dependents.add(cachedState);
+		}
+	}
+
+	@Override
+	public void unregisterDependent(CachedState cachedState) {
+		dependents.remove(cachedState);
+	}
+
+	@Override
+	public void freeFromDependecies() {
+		for (Drawable drawable: store.getAll()) {
+			drawable.unregisterDependent(this);
+		}
 	}
 	
 }

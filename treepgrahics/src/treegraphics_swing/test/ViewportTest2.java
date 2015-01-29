@@ -16,6 +16,8 @@ public class ViewportTest2 {
 	
 	public static void main(String[] args) {
 		SimpleSwingViewport viewport = new SimpleSwingViewport();
+		final Value valueX0 = new StaticValue(700);
+		final Value valueY0 = new StaticValue(700);
 
 		final Value valueX1 = new StaticValue(300);
 		final Value valueY1 = new StaticValue(300);
@@ -30,6 +32,8 @@ public class ViewportTest2 {
 		final Value valueX5 = new AverageValue(valueX1, valueX2, valueX3, valueX4);
 		final Value valueY5 = new AverageValue(valueY1, valueY2, valueY3, valueY4);
 
+		viewport.addDrawable(new TestPoint(valueX0, valueY0, new StaticValue(0), 10, new Color(150, 150, 150)));
+		
 		viewport.addDrawable(new TestPoint(valueX5, valueY5, new StaticValue(1), 10, new Color(200, 100, 0)));
 
 		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX2, valueY2, new StaticValue(2), new Color(0, 0, 0)));

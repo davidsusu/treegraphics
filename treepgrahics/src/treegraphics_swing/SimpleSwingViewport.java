@@ -38,6 +38,10 @@ public class SimpleSwingViewport implements Viewport {
 			@Override
 			protected void paintComponent(Graphics g) {
 				Canvas canvas = new Graphics2DCanvas((Graphics2D)g);
+
+				// FIXME
+				canvas.setColor(new Color(255, 255, 255));
+				canvas.fillRectangle(new Rectangle(0, 0, SimpleSwingViewport.this.getWidth(), SimpleSwingViewport.this.getHeight()));
 				
 				canvas.setOrigin(origin);
 				canvas.setZoom(zoom);
@@ -93,7 +97,8 @@ public class SimpleSwingViewport implements Viewport {
 
 	@Override
 	public Rectangle getArea() {
-		Dimension dimension = new Dimension(component.getWidth()/zoom, component.getHeight()/zoom);
+		//Dimension dimension = new Dimension(component.getWidth()/zoom, component.getHeight()/zoom);
+		Dimension dimension = new Dimension((component.getWidth()-100)/zoom, (component.getHeight()-100)/zoom);
 		return new Rectangle(origin, dimension);
 	}
 	

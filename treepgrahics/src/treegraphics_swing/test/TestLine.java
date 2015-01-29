@@ -1,10 +1,14 @@
 package treegraphics_swing.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
+import treegraphics.util.CachedState;
 import treegraphics.util.Identified;
 import treegraphics.valuetree.SourceValue;
 import treegraphics.valuetree.Value;
@@ -24,6 +28,12 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 	protected Value zValue;
 	
 	protected Color color;
+
+	protected boolean isExpired = true;
+
+	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
+	
+	final protected List<CachedState> dependents = new ArrayList<CachedState>();
 	
 	public TestLine(Value x1Value, Value y1Value, Value x2Value, Value y2Value, Value zValue, Color color) {
 		this.x1Value = x1Value;
@@ -31,6 +41,11 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 		this.x2Value = x2Value;
 		this.y2Value = y2Value;
 		this.zValue = zValue;
+		this.x1Value.registerDependent(this);
+		this.x2Value.registerDependent(this);
+		this.y1Value.registerDependent(this);
+		this.y2Value.registerDependent(this);
+		this.zValue.registerDependent(this);
 		this.color = color;
 		this.id = Identified.Id.getNext();
 	}
@@ -104,6 +119,47 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 	@Override
 	public int getIdentifier() {
 		return id;
+	}
+
+	@Override
+	public void expireState() {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			dependent.expireState(this);
+		}
+	}
+
+	@Override
+	public void expireState(CachedState cachedState) {
+		expiredDependencies.add(cachedState);
+		expireState();
+	}
+
+	@Override
+	public void registerDependent(CachedState cachedState) {
+		// FIXME
+		if (!dependents.contains(cachedState)) {
+			dependents.add(cachedState);
+		}
+	}
+
+	@Override
+	public void unregisterDependent(CachedState cachedState) {
+		dependents.remove(cachedState);
+	}
+
+	@Override
+	public void freeFromDependecies() {
+		x1Value.unregisterDependent(this);
+		y1Value.unregisterDependent(this);
+		x2Value.unregisterDependent(this);
+		y2Value.unregisterDependent(this);
+		zValue.unregisterDependent(this);
+	}
+	
+	@Override
+	public String toString() {
+		return "TestLine(("+x1Value.get()+", "+y1Value.get()+"); ("+x2Value.get()+", "+y2Value.get()+"))";
 	}
 	
 }
