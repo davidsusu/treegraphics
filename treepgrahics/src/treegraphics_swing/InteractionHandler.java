@@ -6,14 +6,21 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.List;
 
+import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
+import treegraphics_swing.test.TestMovableDrawable;
 
 public class InteractionHandler {
 	
 	protected final SimpleSwingViewport viewport;
 	
 	protected final Component component;
+	
+	protected TestMovableDrawable dragMoveObject = null;
+	
+	protected Point dragMoveStartLeftTop = null;
 
 	protected java.awt.Point dragStartPosition = null;
 
@@ -32,6 +39,8 @@ public class InteractionHandler {
 			public void mouseReleased(MouseEvent ev) {
 				if (ev.getButton()==MouseEvent.BUTTON1) {
 					dragStartPosition = null;
+					dragMoveObject = null;
+					dragMoveStartLeftTop = null;
 					dragStartOrigin = null;
 				}
 			}
@@ -39,8 +48,23 @@ public class InteractionHandler {
 			@Override
 			public void mousePressed(MouseEvent ev) {
 				if (ev.getButton()==MouseEvent.BUTTON1) {
-					dragStartPosition = new java.awt.Point(ev.getX(), ev.getY());
-					dragStartOrigin = viewport.getOrigin();
+					int mouseX = ev.getX();
+					int mouseY = ev.getY();
+					dragStartPosition = new java.awt.Point(mouseX, mouseY);
+					List<Drawable> drawables = viewport.getDrawablesAtPixel(mouseX, mouseY);
+					TestMovableDrawable movableDrawable = null;
+					for (Drawable drawable: drawables) {
+						if (drawable instanceof TestMovableDrawable) {
+							movableDrawable = (TestMovableDrawable)drawable;
+							break;
+						}
+					}
+					if (movableDrawable!=null) {
+						dragMoveObject = movableDrawable;
+						dragMoveStartLeftTop = movableDrawable.getReservedRectangle().getLeftTop();
+					} else {
+						dragStartOrigin = viewport.getOrigin();
+					}
 				}
 			}
 			
@@ -54,7 +78,6 @@ public class InteractionHandler {
 			
 			@Override
 			public void mouseClicked(MouseEvent ev) {
-				System.out.println(viewport.getDrawablesAtPixel(ev.getX(), ev.getY()));
 			}
 			
 		});
@@ -67,15 +90,20 @@ public class InteractionHandler {
 			
 			@Override
 			public void mouseDragged(MouseEvent ev) {
-				if (dragStartPosition!=null && dragStartOrigin!=null) {
+				if (dragStartPosition!=null) {
 					int mouseXDiff = ev.getX()-(int)dragStartPosition.getX();
 					int mouseYDiff = ev.getY()-(int)dragStartPosition.getY();
 					double zoom = viewport.getZoom();
-					double originXDiff = mouseXDiff/zoom;
-					double originYDiff = mouseYDiff/zoom;
-					Point newOrigin = new Point(dragStartOrigin.getX()-originXDiff, dragStartOrigin.getY()-originYDiff);
-					viewport.setOrigin(newOrigin);
-					viewport.rebuild();
+					if (dragMoveObject!=null && dragMoveStartLeftTop!=null) {
+						dragMoveObject.moveTo(new Point((dragMoveStartLeftTop.getX()+(mouseXDiff/zoom)), (dragMoveStartLeftTop.getY()+(mouseYDiff/zoom))));
+						viewport.rebuild();
+					} else if (dragStartOrigin!=null) {
+						double originXDiff = mouseXDiff/zoom;
+						double originYDiff = mouseYDiff/zoom;
+						Point newOrigin = new Point(dragStartOrigin.getX()-originXDiff, dragStartOrigin.getY()-originYDiff);
+						viewport.setOrigin(newOrigin);
+						viewport.rebuild();
+					}
 				}
 			}
 			
@@ -85,6 +113,9 @@ public class InteractionHandler {
 			
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent ev) {
+				if (dragMoveObject!=null) {
+					return;
+				}
 				int mouseX = ev.getX();
 				int mouseY = ev.getY();
 				Point oldOrigin = viewport.getOrigin();

@@ -3,6 +3,7 @@ package treegraphics_swing;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 import treegraphics.canvas.Canvas;
@@ -90,7 +91,7 @@ public class Graphics2DCanvas implements Canvas {
 
 	@Override
 	public void drawLine(Point point1, Point point2) {
-		g2d.drawLine((int)point1.getX(), (int)point1.getY(), (int)point2.getX(), (int)point2.getY());
+		g2d.draw(new Line2D.Double(point1.getX(), point1.getY(), point2.getX(), point2.getY()));
 	}
 	
 }

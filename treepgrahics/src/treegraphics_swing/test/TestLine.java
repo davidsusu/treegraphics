@@ -6,9 +6,10 @@ import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 import treegraphics.util.Identified;
+import treegraphics.valuetree.SourceValue;
 import treegraphics.valuetree.Value;
 
-public class TestLine implements Drawable, Identified {
+public class TestLine implements Drawable, TestMovableDrawable, Identified {
 
 	final protected int id;
 	
@@ -57,6 +58,39 @@ public class TestLine implements Drawable, Identified {
 		double cComp = (y1*(x2-x1))+(x1*(y1-y2));
 		double distance = Math.abs((xComp*point.getX())+(yComp*point.getY())+cComp)/Math.sqrt((xComp*xComp)+(yComp*yComp));
 		return (distance<=maxDistance);
+	}
+	
+	@Override
+	public void moveTo(Point leftTopPoint) {
+		if (
+			x1Value instanceof SourceValue
+			&& y1Value instanceof SourceValue
+			&& x2Value instanceof SourceValue
+			&& y2Value instanceof SourceValue
+		) {
+			double x1 = x1Value.get();
+			double y1 = y1Value.get();
+			double x2 = x2Value.get();
+			double y2 = y2Value.get();
+			double destX = leftTopPoint.getX();
+			double destY = leftTopPoint.getY();
+			double width = Math.abs(x2-x1);
+			double height = Math.abs(y2-y1);
+			if (x1>x2) {
+				((SourceValue)x1Value).set(destX+width);
+				((SourceValue)x2Value).set(destX);
+			} else {
+				((SourceValue)x1Value).set(destX);
+				((SourceValue)x2Value).set(destX+width);
+			}
+			if (y1>y2) {
+				((SourceValue)y1Value).set(destY+height);
+				((SourceValue)y2Value).set(destY);
+			} else {
+				((SourceValue)y1Value).set(destY);
+				((SourceValue)y2Value).set(destY+height);
+			}
+		}
 	}
 	
 	@Override

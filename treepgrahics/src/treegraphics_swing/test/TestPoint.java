@@ -7,9 +7,10 @@ import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 import treegraphics.util.Identified;
+import treegraphics.valuetree.SourceValue;
 import treegraphics.valuetree.Value;
 
-public class TestPoint implements Drawable, Identified {
+public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	
 	final protected int id;
 	
@@ -43,6 +44,17 @@ public class TestPoint implements Drawable, Identified {
 	@Override
 	public boolean isPointDominated(Point point) {
 		return getReservedRectangle().containsPoint(point);
+	}
+	
+	@Override
+	public void moveTo(Point leftTopPoint) {
+		if (
+			xValue instanceof SourceValue
+			&& yValue instanceof SourceValue
+		) {
+			((SourceValue)xValue).set(leftTopPoint.getX()+radius);
+			((SourceValue)yValue).set(leftTopPoint.getY()+radius);
+		}
 	}
 	
 	@Override
