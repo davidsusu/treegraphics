@@ -60,7 +60,7 @@ public class IndexedStoreDrawableService implements DrawableService {
 		System.out.println(store.getFiltered("top", null, new FakeDrawable(new Point(0, areaBottom), new Point(10, areaBottom), 0), "z"));
 		System.out.println("----------");
 		
-		List<Drawable> topFiltered = store.getFiltered("top", null, new FakeDrawable(new Point(0, areaBottom), new Point(10, areaBottom), 0), "z");
+		List<Drawable> topFiltered = store.getFiltered("top", null, new FakeDrawable(new Point(0, areaBottom), new Point(10, areaBottom+10), 0), "z");
 		List<Drawable> bottomFiltered = store.getFiltered("bottom", new FakeDrawable(new Point(0, areaTop-10), new Point(10, areaTop), 0), null);
 		List<Drawable> leftFiltered = store.getFiltered("left", null, new FakeDrawable(new Point(areaRight, 0), new Point(areaRight+10, 10), 0));
 		List<Drawable> rightFiltered = store.getFiltered("right", new FakeDrawable(new Point(areaLeft-10, 0), new Point(areaLeft, 10), 0), null);
