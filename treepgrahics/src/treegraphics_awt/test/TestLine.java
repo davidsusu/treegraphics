@@ -1,4 +1,4 @@
-package treegraphics_swing.test;
+package treegraphics_awt.test;
 
 import java.util.ArrayList;
 import java.util.List;

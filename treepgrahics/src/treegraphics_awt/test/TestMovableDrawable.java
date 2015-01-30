@@ -1,4 +1,4 @@
-package treegraphics_swing.test;
+package treegraphics_awt.test;
 
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;

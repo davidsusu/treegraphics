@@ -1,4 +1,4 @@
-package treegraphics_swing;
+package treegraphics_awt;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;

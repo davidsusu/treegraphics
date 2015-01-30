@@ -11,12 +11,14 @@ import treegraphics.canvas.Color;
 import treegraphics.valuetree.Value;
 import treegraphics.valuetree.value.AverageValue;
 import treegraphics.valuetree.value.StaticValue;
-import treegraphics_swing.SimpleSwingViewport;
+import treegraphics_awt.test.TestLine;
+import treegraphics_awt.test.TestPoint;
+import treegraphics_swing.SwingSimpleViewport;
 
 public class ViewportTest1 {
 	
 	public static void main(String[] args) {
-		SimpleSwingViewport viewport = new SimpleSwingViewport();
+		SwingSimpleViewport viewport = new SwingSimpleViewport();
 
 		final StaticValue valueX1 = new StaticValue(100);
 		final StaticValue valueY1 = new StaticValue(300);
