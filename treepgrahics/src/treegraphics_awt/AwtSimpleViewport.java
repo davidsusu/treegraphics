@@ -5,36 +5,26 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Panel;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
 import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
-import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 import treegraphics.viewport.AbstractSimpleViewport;
-import treegraphics.viewport.DrawableService;
 import treegraphics.viewport.IndexedStoreDrawableService;
 
 public class AwtSimpleViewport extends AbstractSimpleViewport {
 
 	protected Component component;
 	
-	// FIXME
-	protected DrawableService drawableService = new IndexedStoreDrawableService();
-	
-	protected Point origin = new Point(0, 0);
-	
-	protected double zoom = 1;
-	
 	public AwtSimpleViewport() {
 		initComponent();
 	}
 	
 	protected void initComponent() {
+		// FIXME
+		this.drawableService = new IndexedStoreDrawableService();
 		this.component = new Panel() {
 			
 			private static final long serialVersionUID = 1L;
@@ -92,26 +82,6 @@ public class AwtSimpleViewport extends AbstractSimpleViewport {
 	}
 	
 	@Override
-	public void addDrawable(Drawable drawable) {
-		drawableService.addDrawable(drawable);
-	}
-
-	@Override
-	public void removeDrawable(Drawable drawable) {
-		drawableService.removeDrawable(drawable);
-	}
-
-	@Override
-	public void setOrigin(Point origin) {
-		this.origin = origin;
-	}
-
-	@Override
-	public Point getOrigin() {
-		return origin;
-	}
-
-	@Override
 	public int getWidth() {
 		return component.getWidth();
 	}
@@ -128,16 +98,6 @@ public class AwtSimpleViewport extends AbstractSimpleViewport {
 	}
 	
 	@Override
-	public void setZoom(double zoom) {
-		this.zoom = zoom;
-	}
-
-	@Override
-	public double getZoom() {
-		return zoom;
-	}
-
-	@Override
 	public void rebuild() {
 		// TODO: rebuild bitmap, and if necessary then additionally rebuild the active area of the DrawableService
 		refresh();
@@ -148,15 +108,4 @@ public class AwtSimpleViewport extends AbstractSimpleViewport {
 		component.repaint();
 	}
 
-	public List<Drawable> getDrawablesAt(Point point) {
-		List<Drawable> drawablesAt = new ArrayList<Drawable>(drawableService.getAffectedDrawables(point));
-		Collections.reverse(drawablesAt);
-		return drawablesAt;
-	}
-	
-	public List<Drawable> getDrawablesAtPixel(int x, int y) {
-		Point virtualPoint =  new Point(((x+0.5)/zoom)+origin.getX(), ((y+0.5)/zoom)+origin.getY());
-		return getDrawablesAt(virtualPoint);
-	}
-	
 }
