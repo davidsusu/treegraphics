@@ -9,7 +9,7 @@ import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
-import treegraphics.indexedstore.DefaultIndexedStore;
+import treegraphics.indexedstore.TreeSetIndexedStore;
 import treegraphics.indexedstore.IndexedStore;
 import treegraphics.util.CachedState;
 
@@ -17,7 +17,7 @@ public class IndexedStoreDrawableService implements DrawableService {
 
 	protected List<DrawableChangeListener> drawableChangeListeners = new ArrayList<DrawableChangeListener>();
 	
-	protected IndexedStore<Drawable> store = new DefaultIndexedStore<Drawable>();
+	protected IndexedStore<Drawable> store = new TreeSetIndexedStore<Drawable>();
 
 	protected boolean isExpired = true;
 

@@ -11,7 +11,7 @@ import java.util.TreeSet;
 
 import treegraphics.util.MultiComparator;
 
-public class DefaultIndexedStore<T> implements IndexedStore<T> {
+public class TreeSetIndexedStore<T> implements IndexedStore<T> {
 
 	protected List<T> items = new ArrayList<T>();
 	
