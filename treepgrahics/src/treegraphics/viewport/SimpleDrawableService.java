@@ -9,7 +9,7 @@ import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 import treegraphics.util.CachedState;
 
-public class SimpleDrawableService implements DrawableService {
+public class SimpleDrawableService extends AbstractDrawableService {
 
 	List<Drawable> drawables = new ArrayList<Drawable>();
 

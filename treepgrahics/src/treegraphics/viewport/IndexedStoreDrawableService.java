@@ -13,7 +13,7 @@ import treegraphics.indexedstore.TreeSetIndexedStore;
 import treegraphics.indexedstore.IndexedStore;
 import treegraphics.util.CachedState;
 
-public class IndexedStoreDrawableService implements DrawableService {
+public class IndexedStoreDrawableService extends AbstractDrawableService {
 
 	protected IndexedStore<Drawable> store = null;
 
