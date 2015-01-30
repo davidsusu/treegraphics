@@ -15,22 +15,30 @@ import treegraphics.util.CachedState;
 
 public class IndexedStoreDrawableService implements DrawableService {
 
-	protected List<DrawableChangeListener> drawableChangeListeners = new ArrayList<DrawableChangeListener>();
-	
-	protected IndexedStore<Drawable> store = new TreeSetIndexedStore<Drawable>();
+	protected IndexedStore<Drawable> store = null;
 
 	protected boolean isExpired = true;
 
 	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
 	
 	final protected List<CachedState> dependents = new ArrayList<CachedState>();
+
+	protected List<DrawableChangeListener> drawableChangeListeners = new ArrayList<DrawableChangeListener>();
 	
 	public IndexedStoreDrawableService() {
+		if (store==null) {
+			store = new TreeSetIndexedStore<Drawable>();
+		}
 		store.addIndex("top", new TopDrawableComparator());
 		store.addIndex("left", new LeftDrawableComparator());
 		store.addIndex("bottom", new BottomDrawableComparator());
 		store.addIndex("right", new RightDrawableComparator());
 		store.addIndex("z", new ZDrawableComparator());
+	}
+	
+	public IndexedStoreDrawableService(IndexedStore<Drawable> store) {
+		this();
+		this.store = store;
 	}
 	
 	@Override
@@ -97,14 +105,6 @@ public class IndexedStoreDrawableService implements DrawableService {
 		//return null;*/
 	}
 
-	public void addDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
-		drawableChangeListeners.add(drawableChangeListener);
-	}
-
-	public void removeDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
-		drawableChangeListeners.remove(drawableChangeListener);
-	}
-	
 	protected class LeftDrawableComparator implements Comparator<Drawable> {
 
 		@Override
@@ -220,7 +220,10 @@ public class IndexedStoreDrawableService implements DrawableService {
 	public void expireState(CachedState cachedState) {
 		if (cachedState instanceof Drawable) {
 			Drawable drawable = (Drawable)cachedState;
-			store.updateItem(drawable);
+			if (store.hasItem(drawable)) {
+				fireDrawableChange(drawable);
+				store.updateItem(drawable);
+			}
 		}
 		expiredDependencies.add(cachedState);
 		expireState();
@@ -243,6 +246,22 @@ public class IndexedStoreDrawableService implements DrawableService {
 	public void freeFromDependecies() {
 		for (Drawable drawable: store.getAll()) {
 			drawable.unregisterDependent(this);
+		}
+	}
+
+	@Override
+	public void addDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
+		drawableChangeListeners.add(drawableChangeListener);
+	}
+
+	@Override
+	public void removeDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
+		drawableChangeListeners.remove(drawableChangeListener);
+	}
+	
+	protected void fireDrawableChange(Drawable drawable) {
+		for (DrawableChangeListener drawableChangeListener: drawableChangeListeners) {
+			drawableChangeListener.drawableChanged(drawable);
 		}
 	}
 	

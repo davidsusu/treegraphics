@@ -19,6 +19,7 @@ public interface IndexedStore<T> {
 	
 	public boolean hasItem(T item);
 	
+	// FIXME
 	public void updateItem(T item);
 
 	public List<T> getAll();

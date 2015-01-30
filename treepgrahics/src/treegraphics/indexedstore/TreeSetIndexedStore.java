@@ -72,9 +72,6 @@ public class TreeSetIndexedStore<T> implements IndexedStore<T> {
 		}
 		for (Map.Entry<String, TreeSet<T>> entry: itemSetMap.entrySet()) {
 			TreeSet<T> itemSet = entry.getValue();
-			// FIXME
-			//itemSet.remove(item);
-			//itemSet.add(item);
 			itemSet.clear();
 			itemSet.addAll(items);
 		}
