@@ -3,6 +3,7 @@ package treegraphics.viewport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import treegraphics.canvas.Canvas;
@@ -57,35 +58,44 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		double areaRight = area.getRight();
 		double areaBottom = area.getBottom();
 		
-		List<Drawable> topFiltered = store.getFiltered("top", null, new FakeDrawable(new Point(0, areaBottom), new Point(10, areaBottom+10), 0), "z");
-		List<Drawable> bottomFiltered = store.getFiltered("bottom", new FakeDrawable(new Point(0, areaTop-10), new Point(10, areaTop), 0), null);
-		List<Drawable> leftFiltered = store.getFiltered("left", null, new FakeDrawable(new Point(areaRight, 0), new Point(areaRight+10, 10), 0));
-		List<Drawable> rightFiltered = store.getFiltered("right", new FakeDrawable(new Point(areaLeft-10, 0), new Point(areaLeft, 10), 0), null);
+		List<Drawable> topFiltered = store.getFiltered("top", null, false, new FakeDrawable(new Point(0, areaBottom), new Point(10, areaBottom+10), 0), false, "z");
+		List<Drawable> bottomFiltered = store.getFiltered("bottom", new FakeDrawable(new Point(0, areaTop-10), new Point(10, areaTop), 0), false, null, false);
+		List<Drawable> leftFiltered = store.getFiltered("left", null, false, new FakeDrawable(new Point(areaRight, 0), new Point(areaRight+10, 10), 0), false);
+		List<Drawable> rightFiltered = store.getFiltered("right", new FakeDrawable(new Point(areaLeft-10, 0), new Point(areaLeft, 10), 0), false, null, false);
 		
-		List<Drawable> viewportFiltered = new ArrayList<Drawable>(topFiltered);
-		viewportFiltered.retainAll(bottomFiltered);
-		viewportFiltered.retainAll(leftFiltered);
-		viewportFiltered.retainAll(rightFiltered);
+		List<Drawable> areaFiltered = new ArrayList<Drawable>(topFiltered);
+		areaFiltered.retainAll(bottomFiltered);
+		areaFiltered.retainAll(leftFiltered);
+		areaFiltered.retainAll(rightFiltered);
 		
-		return viewportFiltered;
+		return areaFiltered;
 	}
 
 	@Override
-	// TODO: use index
 	public Collection<Drawable> getAffectedDrawables(Point point) {
-
-		List<Drawable> affectedDrawables = new ArrayList<Drawable>();
-		for (Drawable drawable: store.getAll("z")) {
-			if (drawable.isPointDominated(point)) {
-				affectedDrawables.add(drawable);
+		double pointX = point.getX();
+		double pointY = point.getY();
+		
+		List<Drawable> topFiltered = store.getFiltered("top", null, false, new FakeDrawable(new Point(0, pointY), new Point(10, pointY+10), 0), true, "z");
+		List<Drawable> bottomFiltered = store.getFiltered("bottom", new FakeDrawable(new Point(0, pointY-10), new Point(10, pointY), 0), true, null, false);
+		List<Drawable> leftFiltered = store.getFiltered("left", null, false, new FakeDrawable(new Point(pointX, 0), new Point(pointX+10, 10), 0), true);
+		List<Drawable> rightFiltered = store.getFiltered("right", new FakeDrawable(new Point(pointX-10, 0), new Point(pointX, 10), 0), true, null, false);
+		
+		List<Drawable> pointFiltered = new ArrayList<Drawable>(topFiltered);
+		pointFiltered.retainAll(bottomFiltered);
+		pointFiltered.retainAll(leftFiltered);
+		pointFiltered.retainAll(rightFiltered);
+		
+		Iterator<Drawable> iterator = pointFiltered.iterator();
+		while(iterator.hasNext()) {
+			Drawable drawable = iterator.next();
+			if (!drawable.isPointDominated(point)) {
+				iterator.remove();
 			}
 		}
-		return affectedDrawables;
 		
-		/*
-		// TODO
-		return store.getAll("z");
-		//return null;*/
+		return pointFiltered;
+		
 	}
 	
 	@Override

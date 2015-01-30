@@ -96,12 +96,12 @@ public class TreeSetIndexedStore<T> implements IndexedStore<T> {
 	}
 
 	@Override
-	public List<T> getFiltered(String filterIndexName, T fromItem, T toItem) {
-		return new ArrayList<T>(getFilteredCollection(filterIndexName, fromItem, toItem));
+	public List<T> getFiltered(String filterIndexName, T fromItem, boolean fromInclusive, T toItem, boolean toInclusive) {
+		return new ArrayList<T>(getFilteredCollection(filterIndexName, fromItem, fromInclusive, toItem, toInclusive));
 	}
 
 	@Override
-	public List<T> getFiltered(String filterIndexName, T fromItem, T toItem, String orderIndexName) {
+	public List<T> getFiltered(String filterIndexName, T fromItem, boolean fromInclusive, T toItem, boolean toInclusive, String orderIndexName) {
 		if (!hasIndex(filterIndexName)) {
 			return new ArrayList<T>();
 		}
@@ -112,12 +112,12 @@ public class TreeSetIndexedStore<T> implements IndexedStore<T> {
 		} else {
 			orderedResult = new ArrayList<T>(items);
 		}
-		orderedResult.retainAll(getFilteredCollection(filterIndexName, fromItem, toItem));
+		orderedResult.retainAll(getFilteredCollection(filterIndexName, fromItem, fromInclusive, toItem, toInclusive));
 		
 		return orderedResult;
 	}
 	
-	protected Collection<T> getFilteredCollection(String filterIndexName, T fromItem, T toItem) {
+	protected Collection<T> getFilteredCollection(String filterIndexName, T fromItem, boolean fromInclusive, T toItem, boolean toInclusive) {
 		if (!hasIndex(filterIndexName)) {
 			return new ArrayList<T>();
 		}
@@ -125,11 +125,11 @@ public class TreeSetIndexedStore<T> implements IndexedStore<T> {
 		if (fromItem==null && toItem==null) {
 			return itemSet;
 		} else if (fromItem==null) {
-			return itemSet.headSet(toItem);
+			return itemSet.headSet(toItem, toInclusive);
 		} else if (toItem==null) {
-			return itemSet.tailSet(fromItem);
+			return itemSet.tailSet(fromItem, fromInclusive);
 		} else {
-			return itemSet.subSet(fromItem, toItem);
+			return itemSet.subSet(fromItem, fromInclusive, toItem, toInclusive);
 		}
 	}
 

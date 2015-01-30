@@ -23,6 +23,7 @@ public class AwtSimpleViewport extends AbstractSimpleViewport {
 
 	protected Component component;
 	
+	// FIXME
 	protected DrawableService drawableService = new IndexedStoreDrawableService();
 	
 	protected Point origin = new Point(0, 0);

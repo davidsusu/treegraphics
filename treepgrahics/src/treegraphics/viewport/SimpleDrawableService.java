@@ -2,6 +2,8 @@ package treegraphics.viewport;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import treegraphics.canvas.Drawable;
@@ -56,7 +58,7 @@ public class SimpleDrawableService extends AbstractDrawableService {
 				affectedDrawables.add(drawable);
 			}
 		}
-		// TODO (sort by z...)
+		Collections.sort(affectedDrawables, new ZDrawableComparator());
 		return affectedDrawables;
 	}
 
@@ -68,8 +70,18 @@ public class SimpleDrawableService extends AbstractDrawableService {
 				affectedDrawables.add(drawable);
 			}
 		}
-		// TODO (sort by z...)
+		Collections.sort(affectedDrawables, new ZDrawableComparator());
 		return affectedDrawables;
+	}
+	
+	// FIXME: duplicated from IndexedStoreDrawableService
+	protected static class ZDrawableComparator implements Comparator<Drawable> {
+
+		@Override
+		public int compare(Drawable drawable1, Drawable drawable2) {
+			return Double.compare(drawable1.getZ(), drawable2.getZ());
+		}
+		
 	}
 
 }

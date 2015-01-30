@@ -26,8 +26,8 @@ public interface IndexedStore<T> {
 
 	public List<T> getAll(String orderIndexName);
 	
-	public List<T> getFiltered(String filterIndexName, T fromItem, T toItem);
+	public List<T> getFiltered(String filterIndexName, T fromItem, boolean fromInclusive, T toItem, boolean toInclusive);
 
-	public List<T> getFiltered(String filterIndexName, T fromItem, T toItem, String orderIndexName);
+	public List<T> getFiltered(String filterIndexName, T fromItem, boolean fromInclusive, T toItem, boolean toInclusive, String orderIndexName);
 	
 }
