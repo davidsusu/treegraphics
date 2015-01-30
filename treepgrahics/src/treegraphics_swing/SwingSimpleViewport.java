@@ -16,7 +16,6 @@ public class SwingSimpleViewport extends AwtSimpleViewport {
 	
 	@Override
 	protected void initComponent() {
-		// FIXME
 		this.drawableService = new IndexedStoreDrawableService();
 		this.component = new JPanel() {
 			

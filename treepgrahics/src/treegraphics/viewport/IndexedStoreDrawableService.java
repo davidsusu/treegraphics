@@ -19,19 +19,20 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 	protected IndexedStore<Drawable> store = null;
 	
 	public IndexedStoreDrawableService() {
-		if (store==null) {
-			store = new TreeSetIndexedStore<Drawable>();
-		}
-		store.addIndex("top", new TopDrawableComparator());
-		store.addIndex("left", new LeftDrawableComparator());
-		store.addIndex("bottom", new BottomDrawableComparator());
-		store.addIndex("right", new RightDrawableComparator());
-		store.addIndex("z", new ZDrawableComparator());
+		initIndexedStore(new TreeSetIndexedStore<Drawable>());
 	}
 	
 	public IndexedStoreDrawableService(IndexedStore<Drawable> store) {
-		this();
+		initIndexedStore(store);
+	}
+	
+	protected void initIndexedStore(IndexedStore<Drawable> store) {
 		this.store = store;
+		this.store.addIndex("top", new TopDrawableComparator());
+		this.store.addIndex("left", new LeftDrawableComparator());
+		this.store.addIndex("bottom", new BottomDrawableComparator());
+		this.store.addIndex("right", new RightDrawableComparator());
+		this.store.addIndex("z", new ZDrawableComparator());
 	}
 	
 	@Override
