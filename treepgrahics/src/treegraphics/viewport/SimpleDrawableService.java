@@ -12,23 +12,7 @@ import treegraphics.util.CachedState;
 public class SimpleDrawableService extends AbstractDrawableService {
 
 	List<Drawable> drawables = new ArrayList<Drawable>();
-
-	protected boolean isExpired = true;
-
-	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
 	
-	final protected List<CachedState> dependents = new ArrayList<CachedState>();
-
-	protected List<DrawableChangeListener> drawableChangeListeners = new ArrayList<DrawableChangeListener>();
-	
-	@Override
-	public void expireState() {
-		isExpired = true;
-		for (CachedState dependent: dependents) {
-			dependent.expireState(this);
-		}
-	}
-
 	@Override
 	public void expireState(CachedState cachedState) {
 		if (cachedState instanceof Drawable) {
@@ -39,19 +23,6 @@ public class SimpleDrawableService extends AbstractDrawableService {
 		}
 		expiredDependencies.add(cachedState);
 		expireState();
-	}
-
-	@Override
-	public void registerDependent(CachedState cachedState) {
-		// FIXME
-		if (!dependents.contains(cachedState)) {
-			dependents.add(cachedState);
-		}
-	}
-
-	@Override
-	public void unregisterDependent(CachedState cachedState) {
-		dependents.remove(cachedState);
 	}
 
 	@Override
@@ -101,18 +72,4 @@ public class SimpleDrawableService extends AbstractDrawableService {
 		return affectedDrawables;
 	}
 
-	public void addDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
-		drawableChangeListeners.add(drawableChangeListener);
-	}
-
-	public void removeDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
-		drawableChangeListeners.remove(drawableChangeListener);
-	}
-
-	protected void fireDrawableChange(Drawable drawable) {
-		for (DrawableChangeListener drawableChangeListener: drawableChangeListeners) {
-			drawableChangeListener.drawableChanged(drawable);
-		}
-	}
-	
 }

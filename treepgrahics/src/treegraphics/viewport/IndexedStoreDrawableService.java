@@ -16,14 +16,6 @@ import treegraphics.util.CachedState;
 public class IndexedStoreDrawableService extends AbstractDrawableService {
 
 	protected IndexedStore<Drawable> store = null;
-
-	protected boolean isExpired = true;
-
-	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
-	
-	final protected List<CachedState> dependents = new ArrayList<CachedState>();
-
-	protected List<DrawableChangeListener> drawableChangeListeners = new ArrayList<DrawableChangeListener>();
 	
 	public IndexedStoreDrawableService() {
 		if (store==null) {
@@ -60,15 +52,6 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 
 	@Override
 	public Collection<Drawable> getAffectedDrawables(Rectangle area) {
-		/*List<Drawable> affectedDrawables = new ArrayList<Drawable>();
-		for (Drawable drawable: store.getAll("z")) {
-			if (drawable.getReservedRectangle().intersects(area)) {
-				affectedDrawables.add(drawable);
-			}
-		}
-		return affectedDrawables;*/
-		
-		
 		double areaLeft = area.getLeft();
 		double areaTop = area.getTop();
 		double areaRight = area.getRight();
@@ -103,6 +86,26 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		// TODO
 		return store.getAll("z");
 		//return null;*/
+	}
+	
+	@Override
+	public void expireState(CachedState cachedState) {
+		if (cachedState instanceof Drawable) {
+			Drawable drawable = (Drawable)cachedState;
+			if (store.hasItem(drawable)) {
+				fireDrawableChange(drawable);
+				store.updateItem(drawable);
+			}
+		}
+		expiredDependencies.add(cachedState);
+		expireState();
+	}
+
+	@Override
+	public void freeFromDependecies() {
+		for (Drawable drawable: store.getAll()) {
+			drawable.unregisterDependent(this);
+		}
 	}
 
 	protected class LeftDrawableComparator implements Comparator<Drawable> {
@@ -208,61 +211,4 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		
 	}
 
-	@Override
-	public void expireState() {
-		isExpired = true;
-		for (CachedState dependent: dependents) {
-			dependent.expireState(this);
-		}
-	}
-
-	@Override
-	public void expireState(CachedState cachedState) {
-		if (cachedState instanceof Drawable) {
-			Drawable drawable = (Drawable)cachedState;
-			if (store.hasItem(drawable)) {
-				fireDrawableChange(drawable);
-				store.updateItem(drawable);
-			}
-		}
-		expiredDependencies.add(cachedState);
-		expireState();
-	}
-
-	@Override
-	public void registerDependent(CachedState cachedState) {
-		// FIXME
-		if (!dependents.contains(cachedState)) {
-			dependents.add(cachedState);
-		}
-	}
-
-	@Override
-	public void unregisterDependent(CachedState cachedState) {
-		dependents.remove(cachedState);
-	}
-
-	@Override
-	public void freeFromDependecies() {
-		for (Drawable drawable: store.getAll()) {
-			drawable.unregisterDependent(this);
-		}
-	}
-
-	@Override
-	public void addDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
-		drawableChangeListeners.add(drawableChangeListener);
-	}
-
-	@Override
-	public void removeDrawableChangeListener(DrawableChangeListener drawableChangeListener) {
-		drawableChangeListeners.remove(drawableChangeListener);
-	}
-	
-	protected void fireDrawableChange(Drawable drawable) {
-		for (DrawableChangeListener drawableChangeListener: drawableChangeListeners) {
-			drawableChangeListener.drawableChanged(drawable);
-		}
-	}
-	
 }
