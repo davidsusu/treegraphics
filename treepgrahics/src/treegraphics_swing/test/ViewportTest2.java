@@ -18,8 +18,8 @@ public class ViewportTest2 {
 	
 	public static void main(String[] args) {
 		SwingSimpleViewport viewport = new SwingSimpleViewport();
-		final Value valueX0 = new StaticValue(700);
-		final Value valueY0 = new StaticValue(700);
+		final Value valueX0 = new StaticValue(100);
+		final Value valueY0 = new StaticValue(100);
 
 		final Value valueX1 = new StaticValue(300);
 		final Value valueY1 = new StaticValue(300);
