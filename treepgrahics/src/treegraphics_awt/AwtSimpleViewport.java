@@ -14,7 +14,7 @@ import treegraphics.canvas.Rectangle;
 import treegraphics.viewport.AbstractSimpleViewport;
 import treegraphics.viewport.IndexedStoreDrawableService;
 
-public class AwtSimpleViewport extends AbstractSimpleViewport {
+public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtViewport {
 
 	protected Component component;
 	
@@ -77,6 +77,7 @@ public class AwtSimpleViewport extends AbstractSimpleViewport {
 		}
 	}
 	
+	@Override
 	public Component getComponent() {
 		return component;
 	}

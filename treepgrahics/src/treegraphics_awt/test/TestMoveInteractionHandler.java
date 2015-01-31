@@ -10,11 +10,11 @@ import java.util.List;
 
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
-import treegraphics_swing.SwingSimpleViewport;
+import treegraphics_swing.SwingViewport;
 
 public class TestMoveInteractionHandler {
 	
-	protected final SwingSimpleViewport viewport;
+	protected final SwingViewport viewport;
 	
 	protected final Component component;
 	
@@ -26,7 +26,7 @@ public class TestMoveInteractionHandler {
 
 	protected Point dragStartOrigin = null;
 	
-	public TestMoveInteractionHandler(SwingSimpleViewport viewport, Component component) {
+	public TestMoveInteractionHandler(SwingViewport viewport, Component component) {
 		this.component = component;
 		this.viewport = viewport;
 	}

@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import treegraphics.viewport.IndexedStoreDrawableService;
 import treegraphics_awt.AwtSimpleViewport;
 
-public class SwingSimpleViewport extends AwtSimpleViewport {
+public class SwingSimpleViewport extends AwtSimpleViewport implements SwingViewport {
 	
 	public SwingSimpleViewport() {
 		super();
