@@ -9,7 +9,9 @@ import java.util.Map;
 //import java.util.NavigableSet;
 import java.util.TreeSet;
 
-public class DefaultIndexedStore<T> implements IndexedStore<T> {
+import treegraphics.util.MultiComparator;
+
+public class TreeSetIndexedStore<T> implements IndexedStore<T> {
 
 	protected List<T> items = new ArrayList<T>();
 	
@@ -22,7 +24,7 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 		if (hasIndex(indexName)) {
 			removeIndex(indexName);
 		}
-		Comparator<T> multiComparator = new MultiComparator(comparator);
+		Comparator<T> multiComparator = new MultiComparator<T>(comparator);
 		indexMap.put(indexName, multiComparator);
 		TreeSet<T> itemSet = new TreeSet<T>(multiComparator);
 		itemSet.addAll(items);
@@ -64,6 +66,18 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 	}
 
 	@Override
+	public void updateItem(T item) {
+		if (!hasItem(item)) {
+			return;
+		}
+		for (Map.Entry<String, TreeSet<T>> entry: itemSetMap.entrySet()) {
+			TreeSet<T> itemSet = entry.getValue();
+			itemSet.clear();
+			itemSet.addAll(items);
+		}
+	}
+
+	@Override
 	public boolean hasItem(T item) {
 		return items.contains(item);
 	}
@@ -82,27 +96,28 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 	}
 
 	@Override
-	public List<T> getFiltered(String filterIndexName, T fromItem, T toItem) {
-		return new ArrayList<T>(getFilteredCollection(filterIndexName, fromItem, toItem));
+	public List<T> getFiltered(String filterIndexName, T fromItem, boolean fromInclusive, T toItem, boolean toInclusive) {
+		return new ArrayList<T>(getFilteredCollection(filterIndexName, fromItem, fromInclusive, toItem, toInclusive));
 	}
 
 	@Override
-	public List<T> getFiltered(String filterIndexName, T fromItem, T toItem, String orderIndexName) {
+	public List<T> getFiltered(String filterIndexName, T fromItem, boolean fromInclusive, T toItem, boolean toInclusive, String orderIndexName) {
 		if (!hasIndex(filterIndexName)) {
 			return new ArrayList<T>();
 		}
-		ArrayList<T> orderedResult = new ArrayList<T>(itemSetMap.get(orderIndexName));
 		
-		// ???: (FIXME: not contains its own item?)
-		//System.out.println(getFilteredCollection(filterIndexName, fromItem, toItem).contains(((NavigableSet<T>)getFilteredCollection(filterIndexName, fromItem, toItem)).first()));
+		ArrayList<T> orderedResult;
+		if (hasIndex(orderIndexName)) {
+			orderedResult = new ArrayList<T>(itemSetMap.get(orderIndexName));
+		} else {
+			orderedResult = new ArrayList<T>(items);
+		}
+		orderedResult.retainAll(getFilteredCollection(filterIndexName, fromItem, fromInclusive, toItem, toInclusive));
 		
-		//orderedResult.retainAll(getFilteredCollection(filterIndexName, fromItem, toItem));
-		
-		orderedResult.retainAll(new ArrayList<T>(getFilteredCollection(filterIndexName, fromItem, toItem)));
 		return orderedResult;
 	}
 	
-	protected Collection<T> getFilteredCollection(String filterIndexName, T fromItem, T toItem) {
+	protected Collection<T> getFilteredCollection(String filterIndexName, T fromItem, boolean fromInclusive, T toItem, boolean toInclusive) {
 		if (!hasIndex(filterIndexName)) {
 			return new ArrayList<T>();
 		}
@@ -110,32 +125,12 @@ public class DefaultIndexedStore<T> implements IndexedStore<T> {
 		if (fromItem==null && toItem==null) {
 			return itemSet;
 		} else if (fromItem==null) {
-			return itemSet.headSet(toItem);
+			return itemSet.headSet(toItem, toInclusive);
 		} else if (toItem==null) {
-			return itemSet.tailSet(fromItem);
+			return itemSet.tailSet(fromItem, fromInclusive);
 		} else {
-			return itemSet.subSet(fromItem, toItem);
+			return itemSet.subSet(fromItem, fromInclusive, toItem, toInclusive);
 		}
-	}
-	
-	// FIXME..
-	protected class MultiComparator implements Comparator<T> {
-		
-		protected Comparator<T> innerComparator;
-		
-		public MultiComparator(Comparator<T> innerComparator) {
-			this.innerComparator = innerComparator;
-		}
-
-		@Override
-		public int compare(T item1, T item2) {
-			int result = innerComparator.compare(item1, item2);
-			if (result==0) {
-				result = -1;
-			}
-			return result;
-		}
-		
 	}
 
 }

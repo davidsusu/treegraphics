@@ -1,8 +1,9 @@
 package treegraphics.valuetree.value;
 
 import treegraphics.valuetree.AbstractValue;
+import treegraphics.valuetree.SourceValue;
 
-public class StaticValue extends AbstractValue {
+public class StaticValue extends AbstractValue implements SourceValue {
 	
 	protected double value;
 	

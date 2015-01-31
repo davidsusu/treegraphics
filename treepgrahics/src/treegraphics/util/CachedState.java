@@ -1,5 +1,6 @@
-package treegraphics.valuetree;
+package treegraphics.util;
 
+// TODO: "mixin" for it
 public interface CachedState {
 	
 	public void expireState();
