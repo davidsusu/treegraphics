@@ -9,8 +9,8 @@ import treegraphics.canvas.Color;
 import treegraphics.valuetree.Value;
 import treegraphics.valuetree.value.AverageValue;
 import treegraphics.valuetree.value.StaticValue;
-import treegraphics_awt.InteractionHandler;
 import treegraphics_awt.test.TestLine;
+import treegraphics_awt.test.TestMoveInteractionHandler;
 import treegraphics_awt.test.TestPoint;
 import treegraphics_swing.SwingSimpleViewport;
 
@@ -51,7 +51,7 @@ public class ViewportTest2 {
 		final Component component = viewport.getComponent();
 		component.setPreferredSize(new java.awt.Dimension(800, 500));
 		
-		final InteractionHandler interactionHandler = new InteractionHandler(viewport, component);
+		final TestMoveInteractionHandler interactionHandler = new TestMoveInteractionHandler(viewport, component);
 		interactionHandler.init();
 		
 		JFrame frame = new JFrame("Viewport test");
