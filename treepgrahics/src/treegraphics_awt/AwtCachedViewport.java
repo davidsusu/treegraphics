@@ -71,9 +71,4 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 		return component.getHeight();
 	}
 	
-	@Override
-	public void refresh() {
-		// FIXME
-	}
-
 }

@@ -63,6 +63,11 @@ abstract public class AbstractCachedViewport implements Viewport {
 	}
 
 	@Override
+	public void refresh() {
+		// TODO
+	}
+
+	@Override
 	public List<Drawable> getDrawablesAt(Point point) {
 		if (drawableCacheRectangle.containsPoint(point)) {
 			return drawableCacheService.getAffectedDrawables(point);
