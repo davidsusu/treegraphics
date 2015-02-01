@@ -19,14 +19,4 @@ public interface DrawableService extends CachedState {
 	
 	public List<Drawable> getAffectedDrawables(Point point);
 
-	public void addDrawableChangeListener(DrawableChangeListener drawableChangeListener);
-
-	public void removeDrawableChangeListener(DrawableChangeListener drawableChangeListener);
-	
-	public interface DrawableChangeListener {
-		
-		public void drawableChanged(Drawable drawable);
-		
-	}
-	
 }

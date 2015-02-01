@@ -16,12 +16,6 @@ public class SimpleDrawableService extends AbstractDrawableService {
 	
 	@Override
 	public void expireState(CachedState cachedState) {
-		if (cachedState instanceof Drawable) {
-			Drawable drawable = (Drawable)cachedState;
-			if (drawables.contains(drawable)) {
-				fireDrawableChange(drawable);
-			}
-		}
 		expiredDependencies.add(cachedState);
 		expireState();
 	}

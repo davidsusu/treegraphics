@@ -103,7 +103,6 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		if (cachedState instanceof Drawable) {
 			Drawable drawable = (Drawable)cachedState;
 			if (store.hasItem(drawable)) {
-				fireDrawableChange(drawable);
 				store.updateItem(drawable);
 			}
 		}
