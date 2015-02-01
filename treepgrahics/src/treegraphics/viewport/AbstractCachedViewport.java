@@ -24,13 +24,18 @@ abstract public class AbstractCachedViewport implements Viewport {
 		drawableService.addDrawable(drawable);
 		if (drawableCacheRectangle.intersects(drawable.getReservedRectangle())) {
 			drawableCacheService.addDrawable(drawable);
+			// TODO: redraw...
 		}
 	}
 
 	@Override
 	public void removeDrawable(Drawable drawable) {
 		drawableService.removeDrawable(drawable);
+		// FIXME: jobb, ha ez az ifen kívül marad...
 		drawableCacheService.removeDrawable(drawable);
+		if (drawableCacheRectangle.intersects(drawable.getReservedRectangle())) {
+			// TODO: redraw...
+		}
 	}
 
 	@Override
