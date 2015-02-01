@@ -5,10 +5,13 @@ import java.awt.Component;
 
 import javax.swing.JFrame;
 
+import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
+import treegraphics.canvas.Rectangle;
 import treegraphics.valuetree.Value;
 import treegraphics.valuetree.value.AverageValue;
 import treegraphics.valuetree.value.StaticValue;
+import treegraphics.viewport.Viewport;
 import treegraphics_awt.test.TestLine;
 import treegraphics_awt.test.TestMoveInteractionHandler;
 import treegraphics_awt.test.TestPoint;
@@ -18,6 +21,20 @@ public class ViewportTest2 {
 	
 	public static void main(String[] args) {
 		SwingSimpleViewport viewport = new SwingSimpleViewport();
+		
+		viewport.addDrawListener(new Viewport.DrawListener() {
+			
+			@Override
+			public void beforeDraw(Canvas canvas, Rectangle area) {
+			}
+			
+			@Override
+			public void afterDraw(Canvas canvas, Rectangle area) {
+				canvas.setColor(new Color(200, 100, 0));
+				canvas.fillRectangle(new Rectangle(10, 10, 300, 30));
+			}
+		});
+		
 		final Value valueX0 = new StaticValue(100);
 		final Value valueY0 = new StaticValue(100);
 

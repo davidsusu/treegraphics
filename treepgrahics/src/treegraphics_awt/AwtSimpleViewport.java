@@ -68,8 +68,16 @@ public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtView
 		canvas.setColor(new Color(255, 255, 255));
 		canvas.fillRectangle(area);
 		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.beforeDraw(canvas, area);
+		}
+		
 		for (Drawable drawable: drawableService.getAffectedDrawables(area)) {
 			drawable.draw(canvas);
+		}
+
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.afterDraw(canvas, area);
 		}
 	}
 	
