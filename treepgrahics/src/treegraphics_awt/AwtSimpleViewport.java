@@ -89,11 +89,6 @@ public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtView
 	}
 
 	@Override
-	public void rebuild() {
-		refresh();
-	}
-
-	@Override
 	public void refresh() {
 		component.repaint();
 	}

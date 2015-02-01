@@ -66,17 +66,10 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 	public int getHeight() {
 		return component.getHeight();
 	}
-
-	@Override
-	public void rebuild() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void refresh() {
-		// TODO Auto-generated method stub
-		
+		// FIXME
 	}
 
 }

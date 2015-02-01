@@ -96,16 +96,14 @@ public class TestMoveInteractionHandler {
 					double zoom = viewport.getZoom();
 					if (dragMoveObject!=null && dragMoveStartLeftTop!=null) {
 						dragMoveObject.moveTo(new Point((dragMoveStartLeftTop.getX()+(mouseXDiff/zoom)), (dragMoveStartLeftTop.getY()+(mouseYDiff/zoom))));
-						viewport.rebuild();
-						
 					} else if (dragStartOrigin!=null) {
 						double originXDiff = mouseXDiff/zoom;
 						double originYDiff = mouseYDiff/zoom;
 						Point newOrigin = new Point(dragStartOrigin.getX()-originXDiff, dragStartOrigin.getY()-originYDiff);
 						viewport.setOrigin(newOrigin);
-						viewport.rebuild();
 					}
 				}
+				viewport.refresh();
 			}
 			
 		});
@@ -129,7 +127,7 @@ public class TestMoveInteractionHandler {
 				Point newOrigin = new Point(oldOrigin.getX()-originXDiff, oldOrigin.getY()-originYDiff);
 				viewport.setZoom(newZoom);
 				viewport.setOrigin(newOrigin);
-				viewport.rebuild();
+				viewport.refresh();
 				if (dragStartPosition!=null && dragStartOrigin!=null) {
 					dragStartPosition = new java.awt.Point(ev.getX(), ev.getY());
 					dragStartOrigin = viewport.getOrigin();

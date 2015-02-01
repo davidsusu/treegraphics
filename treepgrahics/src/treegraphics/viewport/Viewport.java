@@ -26,8 +26,6 @@ public interface Viewport {
 
 	public Rectangle getArea();
 	
-	public void rebuild();
-	
 	public void refresh();
 	
 	public List<Drawable> getDrawablesAt(Point point);
