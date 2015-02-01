@@ -1,6 +1,6 @@
 package treegraphics.viewport;
 
-import java.util.Collection;
+import java.util.List;
 
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
@@ -13,11 +13,11 @@ public interface DrawableService extends CachedState {
 
 	public void removeDrawable(Drawable drawable);
 	
-	public Collection<Drawable> getDrawables();
+	public List<Drawable> getDrawables();
 	
-	public Collection<Drawable> getAffectedDrawables(Rectangle area);
+	public List<Drawable> getAffectedDrawables(Rectangle area);
 	
-	public Collection<Drawable> getAffectedDrawables(Point point);
+	public List<Drawable> getAffectedDrawables(Point point);
 
 	public void addDrawableChangeListener(DrawableChangeListener drawableChangeListener);
 

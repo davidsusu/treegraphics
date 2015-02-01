@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
+import treegraphics.canvas.Rectangle;
 
 abstract public class AbstractSimpleViewport implements Viewport {
 
-	protected DrawableService drawableService;
+	protected DrawableService drawableService = new IndexedStoreDrawableService();
 	
 	protected Point origin = new Point(0, 0);
 	
@@ -46,6 +48,12 @@ abstract public class AbstractSimpleViewport implements Viewport {
 	}
 
 	@Override
+	public Rectangle getArea() {
+		Dimension dimension = new Dimension(getWidth()/zoom, getHeight()/zoom);
+		return new Rectangle(origin, dimension);
+	}
+	
+	@Override
 	public List<Drawable> getDrawablesAt(Point point) {
 		List<Drawable> drawablesAt = new ArrayList<Drawable>(drawableService.getAffectedDrawables(point));
 		Collections.reverse(drawablesAt);
@@ -54,8 +62,8 @@ abstract public class AbstractSimpleViewport implements Viewport {
 
 	@Override
 	public List<Drawable> getDrawablesAtPixel(int x, int y) {
-		Point virtualPoint =  new Point(((x+0.5)/zoom)+origin.getX(), ((y+0.5)/zoom)+origin.getY());
-		return getDrawablesAt(virtualPoint);
+		Point point =  new Point(((x+0.5)/zoom)+origin.getX(), ((y+0.5)/zoom)+origin.getY());
+		return getDrawablesAt(point);
 	}
 	
 }

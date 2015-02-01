@@ -1,7 +1,6 @@
 package treegraphics.viewport;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -48,12 +47,12 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 	}
 
 	@Override
-	public Collection<Drawable> getDrawables() {
+	public List<Drawable> getDrawables() {
 		return store.getAll("z");
 	}
 
 	@Override
-	public Collection<Drawable> getAffectedDrawables(Rectangle area) {
+	public List<Drawable> getAffectedDrawables(Rectangle area) {
 		double areaLeft = area.getLeft();
 		double areaTop = area.getTop();
 		double areaRight = area.getRight();
@@ -73,7 +72,7 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 	}
 
 	@Override
-	public Collection<Drawable> getAffectedDrawables(Point point) {
+	public List<Drawable> getAffectedDrawables(Point point) {
 		double pointX = point.getX();
 		double pointY = point.getY();
 		

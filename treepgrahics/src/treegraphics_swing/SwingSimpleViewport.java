@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-import treegraphics.viewport.IndexedStoreDrawableService;
 import treegraphics_awt.AwtSimpleViewport;
 
 public class SwingSimpleViewport extends AwtSimpleViewport implements SwingViewport {
@@ -16,7 +15,6 @@ public class SwingSimpleViewport extends AwtSimpleViewport implements SwingViewp
 	
 	@Override
 	protected void initComponent() {
-		this.drawableService = new IndexedStoreDrawableService();
 		this.component = new JPanel() {
 			
 			public static final long serialVersionUID = 1L;

@@ -8,11 +8,9 @@ import java.awt.image.BufferedImage;
 
 import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
-import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Rectangle;
 import treegraphics.viewport.AbstractSimpleViewport;
-import treegraphics.viewport.IndexedStoreDrawableService;
 
 public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtViewport {
 
@@ -23,8 +21,6 @@ public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtView
 	}
 	
 	protected void initComponent() {
-		// FIXME
-		this.drawableService = new IndexedStoreDrawableService();
 		this.component = new Panel() {
 			
 			private static final long serialVersionUID = 1L;
@@ -93,14 +89,7 @@ public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtView
 	}
 
 	@Override
-	public Rectangle getArea() {
-		Dimension dimension = new Dimension(component.getWidth()/zoom, component.getHeight()/zoom);
-		return new Rectangle(origin, dimension);
-	}
-	
-	@Override
 	public void rebuild() {
-		// TODO: rebuild bitmap, and if necessary then additionally rebuild the active area of the DrawableService
 		refresh();
 	}
 

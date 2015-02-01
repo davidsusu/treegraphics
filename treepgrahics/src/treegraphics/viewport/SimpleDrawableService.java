@@ -1,7 +1,6 @@
 package treegraphics.viewport;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -46,12 +45,12 @@ public class SimpleDrawableService extends AbstractDrawableService {
 	}
 
 	@Override
-	public Collection<Drawable> getDrawables() {
+	public List<Drawable> getDrawables() {
 		return new ArrayList<Drawable>(drawables);
 	}
 
 	@Override
-	public Collection<Drawable> getAffectedDrawables(Rectangle area) {
+	public List<Drawable> getAffectedDrawables(Rectangle area) {
 		ArrayList<Drawable> affectedDrawables = new ArrayList<Drawable>();
 		for (Drawable drawable: drawables) {
 			if (drawable.getReservedRectangle().intersects(area)) {
@@ -63,7 +62,7 @@ public class SimpleDrawableService extends AbstractDrawableService {
 	}
 
 	@Override
-	public Collection<Drawable> getAffectedDrawables(Point point) {
+	public List<Drawable> getAffectedDrawables(Point point) {
 		ArrayList<Drawable> affectedDrawables = new ArrayList<Drawable>();
 		for (Drawable drawable: drawables) {
 			if (drawable.isPointDominated(point)) {
