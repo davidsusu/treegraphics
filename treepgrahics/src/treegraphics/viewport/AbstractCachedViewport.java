@@ -21,18 +21,23 @@ abstract public class AbstractCachedViewport implements Viewport {
 	
 	@Override
 	public void addDrawable(Drawable drawable) {
-		// TODO
+		drawableService.addDrawable(drawable);
+		if (drawableCacheRectangle.intersects(drawable.getReservedRectangle())) {
+			drawableCacheService.addDrawable(drawable);
+		}
 	}
 
 	@Override
 	public void removeDrawable(Drawable drawable) {
-		// TODO
+		drawableService.removeDrawable(drawable);
+		drawableCacheService.removeDrawable(drawable);
 	}
 
 	@Override
 	public void setOrigin(Point origin) {
-		// TODO Auto-generated method stub
-		
+		// FIXME: round...
+		this.origin = origin;
+		refresh();
 	}
 
 	@Override
@@ -42,7 +47,8 @@ abstract public class AbstractCachedViewport implements Viewport {
 
 	@Override
 	public void setZoom(double zoom) {
-		// TODO
+		this.zoom = zoom;
+		refresh();
 	}
 
 	@Override
