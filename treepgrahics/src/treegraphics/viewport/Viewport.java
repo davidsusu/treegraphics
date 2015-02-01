@@ -2,6 +2,7 @@ package treegraphics.viewport;
 
 import java.util.List;
 
+import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
@@ -31,5 +32,16 @@ public interface Viewport {
 	public List<Drawable> getDrawablesAt(Point point);
 	
 	public List<Drawable> getDrawablesAtPixel(int x, int y);
+
+	public void addDrawListener(DrawListener drawListener);
+
+	public void removeDrawListener(DrawListener drawListener);
 	
+	public interface DrawListener {
+		
+		public void beforeDraw(Canvas canvas, Rectangle area);
+		
+		public void afterDraw(Canvas canvas, Rectangle area);
+		
+	}
 }

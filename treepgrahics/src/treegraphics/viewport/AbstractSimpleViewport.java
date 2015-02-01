@@ -9,7 +9,7 @@ import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 
-abstract public class AbstractSimpleViewport implements Viewport {
+abstract public class AbstractSimpleViewport extends AbstractViewport {
 
 	protected DrawableService drawableService = new IndexedStoreDrawableService();
 	
@@ -65,5 +65,5 @@ abstract public class AbstractSimpleViewport implements Viewport {
 		Point point =  new Point(((x+0.5)/zoom)+origin.getX(), ((y+0.5)/zoom)+origin.getY());
 		return getDrawablesAt(point);
 	}
-	
+
 }

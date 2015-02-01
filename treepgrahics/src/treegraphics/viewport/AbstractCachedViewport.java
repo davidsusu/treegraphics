@@ -7,7 +7,7 @@ import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 
-abstract public class AbstractCachedViewport implements Viewport {
+abstract public class AbstractCachedViewport extends AbstractViewport {
 
 	protected Point origin = new Point(0, 0);
 	
@@ -18,6 +18,8 @@ abstract public class AbstractCachedViewport implements Viewport {
 	protected DrawableService drawableCacheService = new IndexedStoreDrawableService();
 	
 	protected Rectangle drawableCacheRectangle = new Rectangle(0, 0, 0, 0);
+	
+	protected Rectangle renderedRectangle = new Rectangle(0, 0, 0, 0);
 	
 	@Override
 	public void addDrawable(Drawable drawable) {
@@ -31,7 +33,7 @@ abstract public class AbstractCachedViewport implements Viewport {
 	@Override
 	public void removeDrawable(Drawable drawable) {
 		drawableService.removeDrawable(drawable);
-		// FIXME: jobb, ha ez az ifen kívül marad...
+		// FIXME: talán jobb, ha ez az ifen kívül marad...
 		drawableCacheService.removeDrawable(drawable);
 		if (drawableCacheRectangle.intersects(drawable.getReservedRectangle())) {
 			// TODO: redraw...
@@ -40,7 +42,7 @@ abstract public class AbstractCachedViewport implements Viewport {
 
 	@Override
 	public void setOrigin(Point origin) {
-		// FIXME: round...
+		// FIXME: round to pixel...
 		this.origin = origin;
 		refresh();
 	}
@@ -87,4 +89,30 @@ abstract public class AbstractCachedViewport implements Viewport {
 		return getDrawablesAt(point);
 	}
 
+	protected Rectangle getMinimumDrawableCacheArea() {
+		Rectangle area = getArea();
+		return getPaddedRectangle(area, area.getWidth()/2+100, area.getHeight()/2+100);
+	}
+
+	protected Rectangle getMaximumDrawableCacheArea() {
+		Rectangle area = getArea();
+		return getPaddedRectangle(area, area.getWidth()+100, area.getHeight()+100);
+	}
+	
+	protected Rectangle getMinimumRenderingArea() {
+		Rectangle area = getArea();
+		return getPaddedRectangle(area, area.getWidth()*2+100, area.getHeight()*2+100);
+	}
+
+	protected Rectangle getMaximumRenderingArea() {
+		Rectangle area = getArea();
+		return getPaddedRectangle(area, area.getWidth()*3+100, area.getHeight()*3+100);
+	}
+	
+	protected Rectangle getPaddedRectangle(Rectangle rectangle, double xPadding, double yPadding) {
+		Point leftTop = new Point(rectangle.getLeft()-xPadding, rectangle.getTop()-yPadding);
+		Dimension dimension = new Dimension(rectangle.getWidth()+(xPadding*2), rectangle.getHeight()+(yPadding*2));
+		return new Rectangle(leftTop, dimension);
+	}
+	
 }
