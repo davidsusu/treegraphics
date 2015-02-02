@@ -13,6 +13,8 @@ public interface DrawableService extends CachedState {
 
 	public void removeDrawable(Drawable drawable);
 	
+	public void clear();
+	
 	public List<Drawable> getDrawables();
 	
 	public List<Drawable> getAffectedDrawables(Rectangle area);

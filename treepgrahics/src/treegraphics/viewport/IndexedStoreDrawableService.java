@@ -24,7 +24,12 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 	public IndexedStoreDrawableService(IndexedStore<Drawable> store) {
 		initIndexedStore(store);
 	}
-	
+
+	@Override
+	public void clear() {
+		store.clearItems();
+	}
+
 	protected void initIndexedStore(IndexedStore<Drawable> store) {
 		this.store = store;
 		this.store.addIndex("top", new TopDrawableComparator());

@@ -16,12 +16,14 @@ public interface IndexedStore<T> {
 	public void addItem(T item);
 	
 	public void removeItem(T item);
-	
-	public boolean hasItem(T item);
-	
+
 	// FIXME
 	public void updateItem(T item);
 
+	public void clearItems();
+	
+	public boolean hasItem(T item);
+	
 	public List<T> getAll();
 
 	public List<T> getAll(String orderIndexName);

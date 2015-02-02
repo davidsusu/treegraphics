@@ -66,6 +66,14 @@ public class TreeSetIndexedStore<T> implements IndexedStore<T> {
 	}
 
 	@Override
+	public void clearItems() {
+		items.clear();
+		for (Map.Entry<String, TreeSet<T>> entry: itemSetMap.entrySet()) {
+			entry.getValue().clear();
+		}
+	}
+
+	@Override
 	public void updateItem(T item) {
 		if (!hasItem(item)) {
 			return;

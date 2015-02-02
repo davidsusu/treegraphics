@@ -39,6 +39,11 @@ public class SimpleDrawableService extends AbstractDrawableService {
 	}
 
 	@Override
+	public void clear() {
+		drawables.clear();
+	}
+
+	@Override
 	public List<Drawable> getDrawables() {
 		return new ArrayList<Drawable>(drawables);
 	}

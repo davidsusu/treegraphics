@@ -2,6 +2,7 @@ package treegraphics.viewport;
 
 import java.util.List;
 
+import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
@@ -71,7 +72,16 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 
 	@Override
 	public void refresh() {
-		// TODO
+		if (!drawableCacheRectangle.contains(getMinimumDrawableCacheArea()) || !getMaximumDrawableCacheArea().contains(drawableCacheRectangle)) {
+			drawableCacheService.clear();
+			List<Drawable> affectedDrawables = drawableService.getAffectedDrawables(getIdealDrawableCacheArea());
+			for (Drawable drawable: affectedDrawables) {
+				drawableCacheService.addDrawable(drawable);
+			}
+			// TODO: total redraw
+		} else if (!renderedRectangle.contains(getMinimumRenderingArea()) || !getMaximumRenderingArea().contains(renderedRectangle)) {
+			// TODO: partial redraw
+		}
 	}
 
 	@Override
@@ -89,30 +99,57 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 		return getDrawablesAt(point);
 	}
 
-	protected Rectangle getMinimumDrawableCacheArea() {
+	protected Rectangle getMinimumRenderingArea() {
 		Rectangle area = getArea();
 		return getPaddedRectangle(area, area.getWidth()/2+100, area.getHeight()/2+100);
 	}
 
-	protected Rectangle getMaximumDrawableCacheArea() {
+	protected Rectangle getMaximumRenderingArea() {
 		Rectangle area = getArea();
 		return getPaddedRectangle(area, area.getWidth()+100, area.getHeight()+100);
 	}
 	
-	protected Rectangle getMinimumRenderingArea() {
+	protected Rectangle getMinimumDrawableCacheArea() {
 		Rectangle area = getArea();
 		return getPaddedRectangle(area, area.getWidth()*2+100, area.getHeight()*2+100);
 	}
 
-	protected Rectangle getMaximumRenderingArea() {
+	protected Rectangle getIdealDrawableCacheArea() {
 		Rectangle area = getArea();
 		return getPaddedRectangle(area, area.getWidth()*3+100, area.getHeight()*3+100);
+	}
+
+	protected Rectangle getMaximumDrawableCacheArea() {
+		Rectangle area = getArea();
+		return getPaddedRectangle(area, area.getWidth()*4+100, area.getHeight()*4+100);
 	}
 	
 	protected Rectangle getPaddedRectangle(Rectangle rectangle, double xPadding, double yPadding) {
 		Point leftTop = new Point(rectangle.getLeft()-xPadding, rectangle.getTop()-yPadding);
 		Dimension dimension = new Dimension(rectangle.getWidth()+(xPadding*2), rectangle.getHeight()+(yPadding*2));
 		return new Rectangle(leftTop, dimension);
+	}
+	
+	protected void drawToBitmapNode(Rectangle rectangle, BitmapNode bitmapNode) {
+		List<Drawable> drawables = drawableCacheService.getAffectedDrawables(rectangle);
+		Canvas canvas = bitmapNode.getCanvas();
+		canvas.setOrigin(rectangle.getLeftTop());
+		canvas.setZoom(zoom);
+		for (Drawable drawable: drawables) {
+			drawable.draw(canvas);
+		}
+	}
+	
+	protected interface BitmapNode {
+
+		public BitmapNode createParent(int width, int height);
+
+		public BitmapNode createChild(int width, int height);
+		
+		public void copyToParent(int left, int top);
+		
+		public Canvas getCanvas();
+		
 	}
 	
 }
