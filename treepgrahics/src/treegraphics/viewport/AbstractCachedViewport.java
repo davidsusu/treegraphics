@@ -20,7 +20,11 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 	
 	protected Rectangle drawableCacheRectangle = new Rectangle(0, 0, 0, 0);
 	
+	protected BitmapNode renderedBitmapNode = null;
+	
 	protected Rectangle renderedRectangle = new Rectangle(0, 0, 0, 0);
+	
+	protected double renderedZoom = 1;
 	
 	@Override
 	public void addDrawable(Drawable drawable) {
@@ -72,15 +76,17 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 
 	@Override
 	public void refresh() {
-		if (!drawableCacheRectangle.contains(getMinimumDrawableCacheArea()) || !getMaximumDrawableCacheArea().contains(drawableCacheRectangle)) {
+		if (renderedBitmapNode==null || !drawableCacheRectangle.contains(getMinimumDrawableCacheArea()) || !getMaximumDrawableCacheArea().contains(drawableCacheRectangle)) {
 			drawableCacheService.clear();
 			List<Drawable> affectedDrawables = drawableService.getAffectedDrawables(getIdealDrawableCacheArea());
 			for (Drawable drawable: affectedDrawables) {
 				drawableCacheService.addDrawable(drawable);
 			}
-			// TODO: total redraw
+			fullRedraw();
+		} else if (zoom!=renderedZoom) {
+			fullRedraw();
 		} else if (!renderedRectangle.contains(getMinimumRenderingArea()) || !getMaximumRenderingArea().contains(renderedRectangle)) {
-			// TODO: partial redraw
+			partialRedraw();
 		}
 	}
 
@@ -140,15 +146,27 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 		}
 	}
 	
+	protected void partialRedraw() {
+		System.out.println("partial redraw");
+	}
+	
+	protected void fullRedraw() {
+		System.out.println("full redraw");
+	}
+	
 	protected interface BitmapNode {
 
 		public BitmapNode createParent(int width, int height);
 
 		public BitmapNode createChild(int width, int height);
 		
-		public void copyToParent(int left, int top);
+		public void copyToParent(int left, int top, int width, int height, int parentLeft, int parentTop);
 		
 		public Canvas getCanvas();
+		
+		public int getWidth();
+		
+		public int getHeight();
 		
 	}
 	

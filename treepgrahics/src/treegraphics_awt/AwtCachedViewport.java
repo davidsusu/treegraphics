@@ -95,18 +95,26 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 		}
 
 		@Override
-		public void copyToParent(int left, int top) {
+		public void copyToParent(int left, int top, int width, int height, int parentLeft, int parentTop) {
 			if (parentBitmapNode!=null) {
 				Graphics2D g2d = parentBitmapNode.image.createGraphics();
-				int width = image.getWidth();
-				int height = image.getHeight();
-				g2d.drawImage(image, 0, 0, width, height, left, top, left+width, top+height, null);
+				g2d.drawImage(image, left, top, width, height, parentLeft, parentTop, parentLeft+width, parentTop+height, null);
 			}
 		}
 
 		@Override
 		public Canvas getCanvas() {
 			return new Graphics2DCanvas(image.createGraphics());
+		}
+		
+		@Override
+		public int getWidth() {
+			return image.getWidth();
+		}
+		
+		@Override
+		public int getHeight() {
+			return image.getHeight();
 		}
 		
 	}
