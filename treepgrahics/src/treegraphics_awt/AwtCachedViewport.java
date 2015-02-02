@@ -32,13 +32,26 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 			
 			@Override
 			public void paint(Graphics g) {
-				// TODO
+				AwtCachedViewport.this.repaintScreen((Graphics2D)g);
 			}
 			
 		};
 	}
 
-	protected void repaint(Graphics2D g, Rectangle area) {
+	protected void repaintScreen(Graphics2D g) {
+		if (renderedBitmapNode==null) {
+			refresh();
+		}
+		Rectangle area = getArea();
+		BufferedImage image = ((Graphics2DBitmapNode)renderedBitmapNode).getImage();
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int x = (int)(renderedRectangle.getLeft()-area.getLeft());
+		int y = (int)(renderedRectangle.getTop()-area.getTop());
+		g.drawImage(image, x, y, x+width, y+height, 0, 0, width, height, null);
+	}
+	
+	protected void repaintArea(Graphics2D g, Rectangle area) {
 		Canvas canvas = new Graphics2DCanvas(g);
 		
 		// FIXME
@@ -70,6 +83,16 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 	@Override
 	public int getHeight() {
 		return component.getHeight();
+	}
+	
+	@Override
+	public void refreshScreen() {
+		component.repaint();
+	}
+
+	@Override
+	protected BitmapNode createBitmap(int width, int height) {
+		return new Graphics2DBitmapNode(width, height, null);
 	}
 	
 	public class Graphics2DBitmapNode implements BitmapNode {
@@ -117,6 +140,10 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 			return image.getHeight();
 		}
 		
+		public BufferedImage getImage() {
+			return image;
+		}
+
 	}
 	
 }

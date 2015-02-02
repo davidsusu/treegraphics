@@ -1,22 +1,21 @@
 package treegraphics.viewport;
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import treegraphics.canvas.Dimension;
+import treegraphics.canvas.Canvas;
+import treegraphics.canvas.Color;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
+import treegraphics_awt.Graphics2DCanvas;
 
 abstract public class AbstractSimpleViewport extends AbstractViewport {
 
 	protected DrawableService drawableService = new IndexedStoreDrawableService();
 	
-	protected Point origin = new Point(0, 0);
-	
-	protected double zoom = 1;
-
 	@Override
 	public void addDrawable(Drawable drawable) {
 		drawableService.addDrawable(drawable);
@@ -33,26 +32,10 @@ abstract public class AbstractSimpleViewport extends AbstractViewport {
 	}
 
 	@Override
-	public Point getOrigin() {
-		return origin;
-	}
-
-	@Override
 	public void setZoom(double zoom) {
 		this.zoom = zoom;
 	}
 
-	@Override
-	public double getZoom() {
-		return zoom;
-	}
-
-	@Override
-	public Rectangle getArea() {
-		Dimension dimension = new Dimension(getWidth()/zoom, getHeight()/zoom);
-		return new Rectangle(origin, dimension);
-	}
-	
 	@Override
 	public List<Drawable> getDrawablesAt(Point point) {
 		List<Drawable> drawablesAt = new ArrayList<Drawable>(drawableService.getAffectedDrawables(point));
@@ -66,4 +49,33 @@ abstract public class AbstractSimpleViewport extends AbstractViewport {
 		return getDrawablesAt(point);
 	}
 
+	protected void repaint(Graphics2D g) {
+		Canvas canvas = new Graphics2DCanvas(g);
+		
+		// FIXME
+		canvas.setColor(new Color(255, 255, 255));
+		canvas.fillRectangle(new Rectangle(0, 0, getWidth(), getHeight()));
+		
+		canvas.setOrigin(origin);
+		canvas.setZoom(zoom);
+		canvas.setAntialiasing(true);
+
+		Rectangle area = getArea();
+		
+		canvas.setColor(new Color(255, 255, 255));
+		canvas.fillRectangle(area);
+		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.beforeDraw(canvas, area);
+		}
+		
+		for (Drawable drawable: drawableService.getAffectedDrawables(area)) {
+			drawable.draw(canvas);
+		}
+
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.afterDraw(canvas, area);
+		}
+	}
+	
 }
