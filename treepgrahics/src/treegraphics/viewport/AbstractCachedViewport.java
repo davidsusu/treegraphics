@@ -46,8 +46,8 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 	public void setOrigin(Point origin) {
 		double x = origin.getX();
 		double y = origin.getY();
-		x = Math.round(x/zoom)*zoom;
-		y = Math.round(y/zoom)*zoom;
+		x = Math.round(x*zoom)/zoom;
+		y = Math.round(y*zoom)/zoom;
 		this.origin = new Point(x, y);
 		refresh();
 	}
@@ -62,7 +62,8 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 	public void refresh() {
 		if (renderedBitmapNode==null || !drawableCacheRectangle.contains(getMinimumDrawableCacheArea()) || !getMaximumDrawableCacheArea().contains(drawableCacheRectangle)) {
 			drawableCacheService.clear();
-			List<Drawable> affectedDrawables = drawableService.getAffectedDrawables(getIdealDrawableCacheArea());
+			drawableCacheRectangle = getIdealDrawableCacheArea();
+			List<Drawable> affectedDrawables = drawableService.getAffectedDrawables(drawableCacheRectangle);
 			for (Drawable drawable: affectedDrawables) {
 				drawableCacheService.addDrawable(drawable);
 			}
@@ -152,6 +153,7 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 		
 		Canvas canvas = renderedBitmapNode.getCanvas();
 		canvas.setZoom(zoom);
+		canvas.setAntialiasing(true);
 		
 		Point bitmapOrigin = targetArea.getLeftTop();
 		canvas.setOrigin(bitmapOrigin);
@@ -159,8 +161,16 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 		canvas.setColor(new Color(255, 255, 255));
 		canvas.fillRectangle(renderedRectangle);
 		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.beforeDraw(canvas, renderedRectangle);
+		}
+
 		for (Drawable drawable: drawables) {
 			drawable.draw(canvas);
+		}
+		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.afterDraw(canvas, renderedRectangle);
 		}
 	}
 

@@ -1,16 +1,11 @@
 package treegraphics.viewport;
 
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import treegraphics.canvas.Canvas;
-import treegraphics.canvas.Color;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
-import treegraphics.canvas.Rectangle;
-import treegraphics_awt.Graphics2DCanvas;
 
 abstract public class AbstractSimpleViewport extends AbstractViewport {
 
@@ -49,33 +44,4 @@ abstract public class AbstractSimpleViewport extends AbstractViewport {
 		return getDrawablesAt(point);
 	}
 
-	protected void repaint(Graphics2D g) {
-		Canvas canvas = new Graphics2DCanvas(g);
-		
-		// FIXME
-		canvas.setColor(new Color(255, 255, 255));
-		canvas.fillRectangle(new Rectangle(0, 0, getWidth(), getHeight()));
-		
-		canvas.setOrigin(origin);
-		canvas.setZoom(zoom);
-		canvas.setAntialiasing(true);
-
-		Rectangle area = getArea();
-		
-		canvas.setColor(new Color(255, 255, 255));
-		canvas.fillRectangle(area);
-		
-		for (DrawListener drawListener: drawListeners) {
-			drawListener.beforeDraw(canvas, area);
-		}
-		
-		for (Drawable drawable: drawableService.getAffectedDrawables(area)) {
-			drawable.draw(canvas);
-		}
-
-		for (DrawListener drawListener: drawListeners) {
-			drawListener.afterDraw(canvas, area);
-		}
-	}
-	
 }

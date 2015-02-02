@@ -7,8 +7,6 @@ import java.awt.Panel;
 import java.awt.image.BufferedImage;
 
 import treegraphics.canvas.Canvas;
-import treegraphics.canvas.Color;
-import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Rectangle;
 import treegraphics.viewport.AbstractCachedViewport;
 
@@ -37,7 +35,7 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 			
 		};
 	}
-
+	
 	protected void repaintScreen(Graphics2D g) {
 		if (renderedBitmapNode==null) {
 			refresh();
@@ -46,28 +44,9 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 		BufferedImage image = ((Graphics2DBitmapNode)renderedBitmapNode).getImage();
 		int width = image.getWidth();
 		int height = image.getHeight();
-		int x = (int)(renderedRectangle.getLeft()-area.getLeft());
-		int y = (int)(renderedRectangle.getTop()-area.getTop());
+		int x = (int)((renderedRectangle.getLeft()-area.getLeft())*zoom)+getXDisplacement();
+		int y = (int)((renderedRectangle.getTop()-area.getTop())*zoom)+getYDisplacement();
 		g.drawImage(image, x, y, x+width, y+height, 0, 0, width, height, null);
-	}
-	
-	protected void repaintArea(Graphics2D g, Rectangle area) {
-		Canvas canvas = new Graphics2DCanvas(g);
-		
-		// FIXME
-		canvas.setColor(new Color(255, 255, 255));
-		canvas.fillRectangle(new Rectangle(0, 0, getWidth(), getHeight()));
-		
-		canvas.setOrigin(origin);
-		canvas.setZoom(zoom);
-		canvas.setAntialiasing(true);
-		
-		canvas.setColor(new Color(255, 255, 255));
-		canvas.fillRectangle(area);
-		
-		for (Drawable drawable: drawableService.getAffectedDrawables(area)) {
-			drawable.draw(canvas);
-		}
 	}
 	
 	@Override

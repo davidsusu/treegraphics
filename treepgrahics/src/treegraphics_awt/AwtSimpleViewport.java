@@ -2,9 +2,14 @@ package treegraphics_awt;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Panel;
 import java.awt.image.BufferedImage;
 
+import treegraphics.canvas.Canvas;
+import treegraphics.canvas.Color;
+import treegraphics.canvas.Drawable;
+import treegraphics.canvas.Rectangle;
 import treegraphics.viewport.AbstractSimpleViewport;
 
 public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtViewport {
@@ -45,6 +50,34 @@ public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtView
 			}
 			
 		};
+	}
+
+	protected void repaint(Graphics2D g) {
+		Canvas canvas = new Graphics2DCanvas(g);
+		
+		canvas.setColor(new Color(255, 255, 255));
+		canvas.fillRectangle(new Rectangle(0, 0, getWidth(), getHeight()));
+		
+		canvas.setOrigin(getDisplacedOrigin());
+		canvas.setZoom(zoom);
+		canvas.setAntialiasing(true);
+
+		Rectangle area = getArea();
+		
+		canvas.setColor(new Color(255, 255, 255));
+		canvas.fillRectangle(area);
+		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.beforeDraw(canvas, area);
+		}
+		
+		for (Drawable drawable: drawableService.getAffectedDrawables(area)) {
+			drawable.draw(canvas);
+		}
+
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.afterDraw(canvas, area);
+		}
 	}
 	
 	@Override

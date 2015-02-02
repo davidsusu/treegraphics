@@ -25,6 +25,10 @@ public interface Viewport {
 
 	public int getHeight();
 
+	public int getXDisplacement();
+
+	public int getYDisplacement();
+
 	public Rectangle getArea();
 	
 	public void refresh();

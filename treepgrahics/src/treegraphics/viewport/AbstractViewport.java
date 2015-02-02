@@ -41,5 +41,19 @@ abstract public class AbstractViewport implements Viewport {
 	public void removeDrawListener(DrawListener drawListener) {
 		drawListeners.remove(drawListener);
 	}
+
+	@Override
+	public int getXDisplacement() {
+		return 0;
+	}
+
+	@Override
+	public int getYDisplacement() {
+		return 0;
+	}
+
+	protected Point getDisplacedOrigin() {
+		return origin;
+	}
 	
 }
