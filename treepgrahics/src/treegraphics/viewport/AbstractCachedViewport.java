@@ -1,7 +1,5 @@
 package treegraphics.viewport;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import treegraphics.canvas.Canvas;
@@ -10,7 +8,6 @@ import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
-import treegraphics_awt.AwtCachedViewport.Graphics2DBitmapNode;
 
 abstract public class AbstractCachedViewport extends AbstractViewport {
 
