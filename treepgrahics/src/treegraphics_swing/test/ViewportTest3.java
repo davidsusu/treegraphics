@@ -27,8 +27,6 @@ public class ViewportTest3 {
 					
 					@Override
 					public void beforeDraw(Canvas canvas, Rectangle area) {
-						// TODO Auto-generated method stub
-						
 					}
 					
 					@Override
@@ -67,6 +65,7 @@ public class ViewportTest3 {
 		Value valueY1 = new StaticValue(100);
 		Value valueX2 = new StaticValue(500);
 		Value valueY2 = new StaticValue(300);
+		
 		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX2, valueY2, new StaticValue(2), new Color(0, 0, 0)));
 
 		viewport.addDrawable(new TestPoint(valueX1, valueY1, new StaticValue(2), 10, new Color(255, 0, 0)));
