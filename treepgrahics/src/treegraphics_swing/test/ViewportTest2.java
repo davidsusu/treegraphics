@@ -20,7 +20,29 @@ import treegraphics_swing.SwingSimpleViewport;
 public class ViewportTest2 {
 	
 	public static void main(String[] args) {
-		SwingSimpleViewport viewport = new SwingSimpleViewport();
+		SwingSimpleViewport viewport = new SwingSimpleViewport() {
+			
+			@Override
+			public int getWidth() {
+				return 200;
+			}
+
+			@Override
+			public int getHeight() {
+				return 100;
+			}
+
+			@Override
+			public int getXDisplacement() {
+				return 300;
+			}
+
+			@Override
+			public int getYDisplacement() {
+				return 200;
+			}
+			
+		};
 		
 		viewport.addDrawListener(new Viewport.DrawListener() {
 			

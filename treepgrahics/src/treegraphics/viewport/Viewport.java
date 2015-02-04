@@ -30,8 +30,10 @@ public interface Viewport {
 	public int getYDisplacement();
 
 	public Rectangle getArea();
-	
+
 	public void refresh();
+
+	public void rebuild();
 	
 	public List<Drawable> getDrawablesAt(Point point);
 	

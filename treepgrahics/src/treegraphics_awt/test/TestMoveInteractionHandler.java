@@ -10,11 +10,12 @@ import java.util.List;
 
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
+import treegraphics.viewport.Viewport;
 import treegraphics_swing.SwingViewport;
 
 public class TestMoveInteractionHandler {
 	
-	protected final SwingViewport viewport;
+	protected final Viewport viewport;
 	
 	protected final Component component;
 	
@@ -25,6 +26,8 @@ public class TestMoveInteractionHandler {
 	protected java.awt.Point dragStartPosition = null;
 
 	protected Point dragStartOrigin = null;
+	
+	protected TimeoutRebuilderThread rebuildThread = null;
 	
 	public TestMoveInteractionHandler(SwingViewport viewport, Component component) {
 		this.component = component;
@@ -42,6 +45,7 @@ public class TestMoveInteractionHandler {
 					dragMoveObject = null;
 					dragMoveStartLeftTop = null;
 					dragStartOrigin = null;
+					viewport.rebuild();
 				}
 			}
 			
@@ -115,8 +119,8 @@ public class TestMoveInteractionHandler {
 				if (dragMoveObject!=null) {
 					return;
 				}
-				int mouseX = ev.getX();
-				int mouseY = ev.getY();
+				int mouseX = ev.getX()-viewport.getXDisplacement();
+				int mouseY = ev.getY()-viewport.getYDisplacement();
 				Point oldOrigin = viewport.getOrigin();
 				double rot = ev.getPreciseWheelRotation();
 				double oldZoom = viewport.getZoom();
@@ -127,13 +131,66 @@ public class TestMoveInteractionHandler {
 				Point newOrigin = new Point(oldOrigin.getX()-originXDiff, oldOrigin.getY()-originYDiff);
 				viewport.setZoom(newZoom);
 				viewport.setOrigin(newOrigin);
+
+				TestMoveInteractionHandler.this.startRebuild();
 				viewport.refresh();
+				
 				if (dragStartPosition!=null && dragStartOrigin!=null) {
 					dragStartPosition = new java.awt.Point(ev.getX(), ev.getY());
 					dragStartOrigin = viewport.getOrigin();
 				}
 			}
 		});
+		
+	}
+	
+	protected void startRebuild() {
+		if (rebuildThread==null || rebuildThread.isFinished()) {
+			rebuildThread = new TimeoutRebuilderThread(viewport, 200);
+			rebuildThread.start();
+		}
+	}
+	
+	protected class TimeoutRebuilderThread extends Thread {
+
+		protected final int timeStep = 50;
+		
+		protected final Viewport viewport;
+
+		protected final double timeout;
+		
+		protected double elapsedTime = 0;
+		
+		protected boolean finished = false;
+		
+		public TimeoutRebuilderThread(Viewport viewport, double timeout) {
+			this.viewport = viewport;
+			this.timeout = timeout;
+		}
+		
+		public void run() {
+			while (true) {
+				try {
+					sleep(timeStep);
+				} catch (InterruptedException e) {
+					break;
+				}
+				elapsedTime += timeStep;
+				if (elapsedTime>=timeout) {
+					doRebuild();
+					finished = true;
+					break;
+				}
+			}
+		}
+		
+		public boolean isFinished() {
+			return finished;
+		}
+		
+		protected void doRebuild() {
+			viewport.rebuild();
+		}
 		
 	}
 	

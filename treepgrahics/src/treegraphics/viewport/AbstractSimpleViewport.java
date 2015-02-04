@@ -32,6 +32,11 @@ abstract public class AbstractSimpleViewport extends AbstractViewport {
 	}
 
 	@Override
+	public void rebuild() {
+		refresh();
+	}
+
+	@Override
 	public List<Drawable> getDrawablesAt(Point point) {
 		List<Drawable> drawablesAt = new ArrayList<Drawable>(drawableService.getAffectedDrawables(point));
 		Collections.reverse(drawablesAt);

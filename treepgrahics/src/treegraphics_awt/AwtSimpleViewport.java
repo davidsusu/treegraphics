@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
 import treegraphics.canvas.Drawable;
+import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 import treegraphics.viewport.AbstractSimpleViewport;
 
@@ -54,11 +55,16 @@ public class AwtSimpleViewport extends AbstractSimpleViewport implements AwtView
 
 	protected void repaint(Graphics2D g) {
 		Canvas canvas = new Graphics2DCanvas(g);
+
+		int xDisplacement = getXDisplacement();
+		int yDisplacement = getYDisplacement();
 		
 		canvas.setColor(new Color(255, 255, 255));
-		canvas.fillRectangle(new Rectangle(0, 0, getWidth(), getHeight()));
+		canvas.fillRectangle(new Rectangle(xDisplacement, yDisplacement, getWidth()+xDisplacement, getHeight()+yDisplacement));
 		
-		canvas.setOrigin(getDisplacedOrigin());
+		// FIXME
+		Point displacedOrigin = new Point(origin.getX()-(xDisplacement/zoom), origin.getY()-(yDisplacement/zoom));
+		canvas.setOrigin(displacedOrigin);
 		canvas.setZoom(zoom);
 		canvas.setAntialiasing(true);
 

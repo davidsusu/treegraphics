@@ -52,8 +52,4 @@ abstract public class AbstractViewport implements Viewport {
 		return 0;
 	}
 
-	protected Point getDisplacedOrigin() {
-		return origin;
-	}
-	
 }

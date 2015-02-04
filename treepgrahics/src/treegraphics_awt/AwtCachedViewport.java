@@ -4,10 +4,10 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Panel;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import treegraphics.canvas.Canvas;
-import treegraphics.canvas.Rectangle;
 import treegraphics.viewport.AbstractCachedViewport;
 
 public class AwtCachedViewport extends AbstractCachedViewport implements AwtViewport {
@@ -37,16 +37,27 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 	}
 	
 	protected void repaintScreen(Graphics2D g) {
+		// TODO
 		if (renderedBitmapNode==null) {
-			refresh();
+			// FIXME
+			return;
 		}
-		Rectangle area = getArea();
+		
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+		// FIXME
+		g.setColor(new java.awt.Color(255, 0, 0));
+		//g.fillRect(getXDisplacement(), getYDisplacement(), getWidth(), getHeight());
+		g.fillRect(0, 0, component.getWidth(), component.getHeight());
+		
 		BufferedImage image = ((Graphics2DBitmapNode)renderedBitmapNode).getImage();
-		int width = image.getWidth();
-		int height = image.getHeight();
-		int x = (int)((renderedRectangle.getLeft()-area.getLeft())*zoom)+getXDisplacement();
-		int y = (int)((renderedRectangle.getTop()-area.getTop())*zoom)+getYDisplacement();
-		g.drawImage(image, x, y, x+width, y+height, 0, 0, width, height, null);
+		
+		int targetX = (int)(Math.round((renderedRectangle.getLeft()-origin.getX())*zoom))+getXDisplacement();
+		int targetWidth = (int)(renderedBitmapNode.getWidth()*zoom/renderedZoom);
+		int targetY = (int)(Math.round((renderedRectangle.getTop()-origin.getY())*zoom))+getYDisplacement();
+		int targetHeight = (int)(renderedBitmapNode.getHeight()*zoom/renderedZoom);
+		
+		g.drawImage(image, targetX, targetY, targetX+targetWidth, targetY+targetHeight, 0, 0, image.getWidth(), image.getHeight(), null);
 	}
 	
 	@Override
