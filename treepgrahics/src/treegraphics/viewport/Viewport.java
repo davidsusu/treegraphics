@@ -31,6 +31,12 @@ public interface Viewport {
 
 	public Rectangle getArea();
 
+	public int getFullWidth();
+
+	public int getFullHeight();
+
+	public Rectangle getFullArea();
+
 	public void refresh();
 
 	public void rebuild();
@@ -44,10 +50,14 @@ public interface Viewport {
 	public void removeDrawListener(DrawListener drawListener);
 	
 	public interface DrawListener {
+
+		public void beforeRefresh(Canvas canvas, Rectangle area);
 		
 		public void beforeDraw(Canvas canvas, Rectangle area);
-		
+
 		public void afterDraw(Canvas canvas, Rectangle area);
+
+		public void afterRefresh(Canvas canvas, Rectangle area);
 		
 	}
 }

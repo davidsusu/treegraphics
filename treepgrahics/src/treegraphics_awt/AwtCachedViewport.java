@@ -8,6 +8,8 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import treegraphics.canvas.Canvas;
+import treegraphics.canvas.Point;
+import treegraphics.canvas.Rectangle;
 import treegraphics.viewport.AbstractCachedViewport;
 
 public class AwtCachedViewport extends AbstractCachedViewport implements AwtViewport {
@@ -44,11 +46,9 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 		}
 		
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-
-		// FIXME
-		g.setColor(new java.awt.Color(255, 0, 0));
-		//g.fillRect(getXDisplacement(), getYDisplacement(), getWidth(), getHeight());
-		g.fillRect(0, 0, component.getWidth(), component.getHeight());
+		
+		g.setColor(new java.awt.Color(255, 255, 255));
+		g.fillRect(getXDisplacement(), getYDisplacement(), getWidth(), getHeight());
 		
 		BufferedImage image = ((Graphics2DBitmapNode)renderedBitmapNode).getImage();
 		
@@ -56,8 +56,28 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 		int targetWidth = (int)(renderedBitmapNode.getWidth()*zoom/renderedZoom);
 		int targetY = (int)(Math.round((renderedRectangle.getTop()-origin.getY())*zoom))+getYDisplacement();
 		int targetHeight = (int)(renderedBitmapNode.getHeight()*zoom/renderedZoom);
+
+		int xDisplacement = getXDisplacement();
+		int yDisplacement = getYDisplacement();
+		
+		Canvas fullCanvas = new Graphics2DCanvas((Graphics2D)(g.create()));
+		Point displacedOrigin = new Point(origin.getX()-(xDisplacement/zoom), origin.getY()-(yDisplacement/zoom));
+		fullCanvas.setOrigin(displacedOrigin);
+		fullCanvas.setZoom(zoom);
+		fullCanvas.setAntialiasing(true);
+
+		Rectangle area = getArea();
+		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.beforeRefresh(fullCanvas, area);
+		}
 		
 		g.drawImage(image, targetX, targetY, targetX+targetWidth, targetY+targetHeight, 0, 0, image.getWidth(), image.getHeight(), null);
+
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.afterRefresh(fullCanvas, area);
+		}
+		
 	}
 	
 	@Override
@@ -66,12 +86,12 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 	}
 	
 	@Override
-	public int getWidth() {
+	public int getFullWidth() {
 		return component.getWidth();
 	}
 
 	@Override
-	public int getHeight() {
+	public int getFullHeight() {
 		return component.getHeight();
 	}
 	

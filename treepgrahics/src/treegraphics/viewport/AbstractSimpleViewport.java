@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import treegraphics.canvas.Canvas;
+import treegraphics.canvas.Color;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
+import treegraphics.canvas.Rectangle;
 
 abstract public class AbstractSimpleViewport extends AbstractViewport {
 
@@ -43,10 +46,44 @@ abstract public class AbstractSimpleViewport extends AbstractViewport {
 		return drawablesAt;
 	}
 
-	@Override
-	public List<Drawable> getDrawablesAtPixel(int x, int y) {
-		Point point =  new Point(((x+0.5)/zoom)+origin.getX(), ((y+0.5)/zoom)+origin.getY());
-		return getDrawablesAt(point);
-	}
+	protected void repaint(Canvas canvas) {
+		int xDisplacement = getXDisplacement();
+		int yDisplacement = getYDisplacement();
+		
+		canvas.setColor(new Color(255, 255, 255));
+		canvas.fillRectangle(new Rectangle(xDisplacement, yDisplacement, getWidth()+xDisplacement, getHeight()+yDisplacement));
+		
+		// FIXME
+		Point displacedOrigin = new Point(origin.getX()-(xDisplacement/zoom), origin.getY()-(yDisplacement/zoom));
+		canvas.setOrigin(displacedOrigin);
+		canvas.setZoom(zoom);
+		canvas.setAntialiasing(true);
 
+		Rectangle area = getArea();
+		
+		canvas.setColor(new Color(255, 255, 255));
+		canvas.fillRectangle(area);
+
+
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.beforeRefresh(canvas, area);
+		}
+		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.beforeDraw(canvas, area);
+		}
+		
+		for (Drawable drawable: drawableService.getAffectedDrawables(area)) {
+			drawable.draw(canvas);
+		}
+
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.afterDraw(canvas, area);
+		}
+
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.afterRefresh(canvas, area);
+		}
+	}
+	
 }

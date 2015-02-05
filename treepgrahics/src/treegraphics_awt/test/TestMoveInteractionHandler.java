@@ -25,6 +25,8 @@ public class TestMoveInteractionHandler {
 
 	protected java.awt.Point dragStartPosition = null;
 
+	protected java.awt.Point dragRebuildPosition = null;
+
 	protected Point dragStartOrigin = null;
 	
 	protected TimeoutRebuilderThread rebuildThread = null;
@@ -42,6 +44,7 @@ public class TestMoveInteractionHandler {
 			public void mouseReleased(MouseEvent ev) {
 				if (ev.getButton()==MouseEvent.BUTTON1) {
 					dragStartPosition = null;
+					dragRebuildPosition = null;
 					dragMoveObject = null;
 					dragMoveStartLeftTop = null;
 					dragStartOrigin = null;
@@ -55,6 +58,7 @@ public class TestMoveInteractionHandler {
 					int mouseX = ev.getX();
 					int mouseY = ev.getY();
 					dragStartPosition = new java.awt.Point(mouseX, mouseY);
+					dragRebuildPosition = dragStartPosition;
 					List<Drawable> drawables = viewport.getDrawablesAtPixel(mouseX, mouseY);
 					TestMovableDrawable movableDrawable = null;
 					for (Drawable drawable: drawables) {
@@ -94,9 +98,15 @@ public class TestMoveInteractionHandler {
 			
 			@Override
 			public void mouseDragged(MouseEvent ev) {
+				int mouseX = ev.getX();
+				int mouseY = ev.getY();
+				int mouseRefreshXDiff = 0;
+				int mouseRefreshYDiff = 0;
 				if (dragStartPosition!=null) {
-					int mouseXDiff = ev.getX()-(int)dragStartPosition.getX();
-					int mouseYDiff = ev.getY()-(int)dragStartPosition.getY();
+					int mouseXDiff = mouseX-(int)dragStartPosition.getX();
+					int mouseYDiff = mouseY-(int)dragStartPosition.getY();
+					mouseRefreshXDiff = mouseX-(int)dragRebuildPosition.getX();
+					mouseRefreshYDiff = mouseY-(int)dragRebuildPosition.getY();
 					double zoom = viewport.getZoom();
 					if (dragMoveObject!=null && dragMoveStartLeftTop!=null) {
 						dragMoveObject.moveTo(new Point((dragMoveStartLeftTop.getX()+(mouseXDiff/zoom)), (dragMoveStartLeftTop.getY()+(mouseYDiff/zoom))));
@@ -107,7 +117,12 @@ public class TestMoveInteractionHandler {
 						viewport.setOrigin(newOrigin);
 					}
 				}
-				viewport.refresh();
+				if (Math.abs(mouseRefreshXDiff)>100 || Math.abs(mouseRefreshYDiff)>100) {
+					viewport.rebuild();
+					dragRebuildPosition = new java.awt.Point(mouseX, mouseY);
+				} else {
+					viewport.refresh();
+				}
 			}
 			
 		});
@@ -119,15 +134,17 @@ public class TestMoveInteractionHandler {
 				if (dragMoveObject!=null) {
 					return;
 				}
-				int mouseX = ev.getX()-viewport.getXDisplacement();
-				int mouseY = ev.getY()-viewport.getYDisplacement();
+				int mouseX = ev.getX();
+				int mouseY = ev.getY();
+				int mouseDisplacedX = mouseX-viewport.getXDisplacement();
+				int mouseDisplacedY = mouseY-viewport.getYDisplacement();
 				Point oldOrigin = viewport.getOrigin();
 				double rot = ev.getPreciseWheelRotation();
 				double oldZoom = viewport.getZoom();
 				double zoomScale = Math.pow(0.9, rot);
 				double newZoom = oldZoom*zoomScale;
-				double originXDiff = (mouseX/newZoom)-(mouseX/oldZoom);
-				double originYDiff = (mouseY/newZoom)-(mouseY/oldZoom);
+				double originXDiff = (mouseDisplacedX/newZoom)-(mouseDisplacedX/oldZoom);
+				double originYDiff = (mouseDisplacedY/newZoom)-(mouseDisplacedY/oldZoom);
 				Point newOrigin = new Point(oldOrigin.getX()-originXDiff, oldOrigin.getY()-originYDiff);
 				viewport.setZoom(newZoom);
 				viewport.setOrigin(newOrigin);
@@ -137,6 +154,7 @@ public class TestMoveInteractionHandler {
 				
 				if (dragStartPosition!=null && dragStartOrigin!=null) {
 					dragStartPosition = new java.awt.Point(ev.getX(), ev.getY());
+					dragRebuildPosition = dragStartPosition;
 					dragStartOrigin = viewport.getOrigin();
 				}
 			}

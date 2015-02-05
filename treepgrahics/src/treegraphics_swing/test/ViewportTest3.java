@@ -5,9 +5,12 @@ import java.awt.Component;
 
 import javax.swing.JFrame;
 
+import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
+import treegraphics.canvas.Rectangle;
 import treegraphics.valuetree.Value;
 import treegraphics.valuetree.value.StaticValue;
+import treegraphics.viewport.Viewport;
 import treegraphics_awt.test.TestLine;
 import treegraphics_awt.test.TestMoveInteractionHandler;
 import treegraphics_awt.test.TestPoint;
@@ -16,11 +19,11 @@ import treegraphics_swing.SwingCachedViewport;
 public class ViewportTest3 {
 
 	public static void main(String[] args) {
-		SwingCachedViewport viewport = new SwingCachedViewport() {
+		final SwingCachedViewport viewport = new SwingCachedViewport() {
 			
 			@Override
 			public int getWidth() {
-				return 200;
+				return 100;
 			}
 
 			@Override
@@ -39,6 +42,41 @@ public class ViewportTest3 {
 			}
 			
 		};
+		
+		viewport.addDrawListener(new Viewport.DrawListener() {
+
+			@Override
+			public void beforeRefresh(Canvas canvas, Rectangle area) {
+				canvas.setColor(new Color(255, 0, 0));
+				canvas.fillRectangle(viewport.getFullArea());
+				
+				canvas.setColor(new Color(255, 255, 255));
+				canvas.fillRectangle(area);
+				
+				canvas.setColor(new Color(90, 90, 90));
+				canvas.fillRectangle(new Rectangle(155, 130, 170, 145));
+			}
+			
+			@Override
+			public void beforeDraw(Canvas canvas, Rectangle area) {
+				canvas.setColor(new Color(150, 170, 250));
+				canvas.fillRectangle(new Rectangle(145, 120, 160, 135));
+			}
+			
+			@Override
+			public void afterDraw(Canvas canvas, Rectangle area) {
+				canvas.setColor(new Color(0, 255, 255));
+				canvas.fillRectangle(new Rectangle(100, 100, 115, 115));
+			}
+			
+			@Override
+			public void afterRefresh(Canvas canvas, Rectangle area) {
+				canvas.setColor(new Color(50, 170, 0));
+				canvas.fillRectangle(new Rectangle(125, 110, 140, 125));
+			}
+			
+		});
+		
 		
 		Value valueX1 = new StaticValue(100);
 		Value valueY1 = new StaticValue(100);

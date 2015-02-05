@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import treegraphics_awt.AwtSimpleViewport;
+import treegraphics_awt.Graphics2DCanvas;
 
 public class SwingSimpleViewport extends AwtSimpleViewport implements SwingViewport {
 	
@@ -21,7 +22,7 @@ public class SwingSimpleViewport extends AwtSimpleViewport implements SwingViewp
 			
 			@Override
 			protected void paintComponent(Graphics g) {
-				SwingSimpleViewport.this.repaint((Graphics2D)g);
+				SwingSimpleViewport.this.repaint(new Graphics2DCanvas((Graphics2D)g));
 			}
 			
 		};

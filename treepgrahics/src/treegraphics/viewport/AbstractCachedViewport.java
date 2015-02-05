@@ -80,12 +80,6 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 		}
 	}
 
-	@Override
-	public List<Drawable> getDrawablesAtPixel(int x, int y) {
-		Point point =  new Point(((x+0.5)/zoom)+origin.getX(), ((y+0.5)/zoom)+origin.getY());
-		return getDrawablesAt(point);
-	}
-
 	protected Rectangle getMinimumRenderingArea() {
 		Rectangle area = getArea();
 		return getPaddedRectangle(area, area.getWidth()/2, area.getHeight()/2);
@@ -138,6 +132,8 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 	}
 
 	protected void rerenderBitmapNodeFully() {
+		// TODO: drawableCacheService...
+		
 		Rectangle targetArea = getOptimalRenderingArea();
 		int bitmapWidth = (int)(targetArea.getWidth()*zoom);
 		int bitmapHeight = (int)(targetArea.getHeight()*zoom);
@@ -169,6 +165,7 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 		}
 	}
 	
+	// FIXME
 	protected void requireDrawableCache() {
 		drawableCacheService = new IndexedStoreDrawableService();
 		drawableCacheRectangle = getOptimalDrawableCacheArea();

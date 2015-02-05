@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import treegraphics.canvas.Dimension;
+import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 
@@ -27,11 +28,16 @@ abstract public class AbstractViewport implements Viewport {
 
 	@Override
 	public Rectangle getArea() {
-		// FIXME
 		Dimension dimension = new Dimension(getWidth()/zoom, getHeight()/zoom);
 		return new Rectangle(origin, dimension);
 	}
 
+	public Rectangle getFullArea() {
+		Point leftTop = new Point(origin.getX()-(getXDisplacement()/zoom), origin.getY()-(getYDisplacement()/zoom));
+		Dimension dimension = new Dimension(getFullWidth()/zoom, getFullHeight()/zoom);
+		return new Rectangle(leftTop, dimension);
+	}
+	
 	@Override
 	public void addDrawListener(DrawListener drawListener) {
 		drawListeners.add(drawListener);
@@ -50,6 +56,22 @@ abstract public class AbstractViewport implements Viewport {
 	@Override
 	public int getYDisplacement() {
 		return 0;
+	}
+
+	@Override
+	public int getWidth() {
+		return getFullWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return getFullHeight();
+	}
+	
+	@Override
+	public List<Drawable> getDrawablesAtPixel(int x, int y) {
+		Point point =  new Point(((x+0.5)/zoom)+origin.getX()-(getXDisplacement()/zoom), ((y+0.5)/zoom)+origin.getY()-(getYDisplacement()/zoom));
+		return getDrawablesAt(point);
 	}
 
 }
