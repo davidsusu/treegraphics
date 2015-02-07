@@ -24,7 +24,11 @@ public class TestMoveInteractionHandler {
 
 	protected java.awt.Point dragStartPosition = null;
 
+	protected java.awt.Point dragRebuildPosition = null;
+
 	protected Point dragStartOrigin = null;
+	
+	protected TimeoutRebuilderThread rebuildThread = null;
 	
 	public TestMoveInteractionHandler(Viewport viewport, Component component) {
 		this.component = component;
@@ -39,9 +43,11 @@ public class TestMoveInteractionHandler {
 			public void mouseReleased(MouseEvent ev) {
 				if (ev.getButton()==MouseEvent.BUTTON1) {
 					dragStartPosition = null;
+					dragRebuildPosition = null;
 					dragMoveObject = null;
 					dragMoveStartLeftTop = null;
 					dragStartOrigin = null;
+					viewport.rebuild();
 				}
 			}
 			
@@ -51,6 +57,7 @@ public class TestMoveInteractionHandler {
 					int mouseX = ev.getX();
 					int mouseY = ev.getY();
 					dragStartPosition = new java.awt.Point(mouseX, mouseY);
+					dragRebuildPosition = dragStartPosition;
 					List<Drawable> drawables = viewport.getDrawablesAtPixel(mouseX, mouseY);
 					TestMovableDrawable movableDrawable = null;
 					for (Drawable drawable: drawables) {
@@ -90,9 +97,15 @@ public class TestMoveInteractionHandler {
 			
 			@Override
 			public void mouseDragged(MouseEvent ev) {
+				int mouseX = ev.getX();
+				int mouseY = ev.getY();
+				int mouseRefreshXDiff = 0;
+				int mouseRefreshYDiff = 0;
 				if (dragStartPosition!=null) {
-					int mouseXDiff = ev.getX()-(int)dragStartPosition.getX();
-					int mouseYDiff = ev.getY()-(int)dragStartPosition.getY();
+					int mouseXDiff = mouseX-(int)dragStartPosition.getX();
+					int mouseYDiff = mouseY-(int)dragStartPosition.getY();
+					mouseRefreshXDiff = mouseX-(int)dragRebuildPosition.getX();
+					mouseRefreshYDiff = mouseY-(int)dragRebuildPosition.getY();
 					double zoom = viewport.getZoom();
 					if (dragMoveObject!=null && dragMoveStartLeftTop!=null) {
 						dragMoveObject.moveTo(new Point((dragMoveStartLeftTop.getX()+(mouseXDiff/zoom)), (dragMoveStartLeftTop.getY()+(mouseYDiff/zoom))));
@@ -103,7 +116,12 @@ public class TestMoveInteractionHandler {
 						viewport.setOrigin(newOrigin);
 					}
 				}
-				viewport.refresh();
+				if (Math.abs(mouseRefreshXDiff)>100 || Math.abs(mouseRefreshYDiff)>100) {
+					viewport.rebuild();
+					dragRebuildPosition = new java.awt.Point(mouseX, mouseY);
+				} else {
+					viewport.refresh();
+				}
 			}
 			
 		});
@@ -117,23 +135,79 @@ public class TestMoveInteractionHandler {
 				}
 				int mouseX = ev.getX();
 				int mouseY = ev.getY();
+				int mouseDisplacedX = mouseX-viewport.getXDisplacement();
+				int mouseDisplacedY = mouseY-viewport.getYDisplacement();
 				Point oldOrigin = viewport.getOrigin();
 				double rot = ev.getPreciseWheelRotation();
 				double oldZoom = viewport.getZoom();
 				double zoomScale = Math.pow(0.9, rot);
 				double newZoom = oldZoom*zoomScale;
-				double originXDiff = (mouseX/newZoom)-(mouseX/oldZoom);
-				double originYDiff = (mouseY/newZoom)-(mouseY/oldZoom);
+				double originXDiff = (mouseDisplacedX/newZoom)-(mouseDisplacedX/oldZoom);
+				double originYDiff = (mouseDisplacedY/newZoom)-(mouseDisplacedY/oldZoom);
 				Point newOrigin = new Point(oldOrigin.getX()-originXDiff, oldOrigin.getY()-originYDiff);
 				viewport.setZoom(newZoom);
 				viewport.setOrigin(newOrigin);
+
+				TestMoveInteractionHandler.this.startRebuild();
 				viewport.refresh();
+				
 				if (dragStartPosition!=null && dragStartOrigin!=null) {
 					dragStartPosition = new java.awt.Point(ev.getX(), ev.getY());
+					dragRebuildPosition = dragStartPosition;
 					dragStartOrigin = viewport.getOrigin();
 				}
 			}
 		});
+		
+	}
+	
+	protected void startRebuild() {
+		if (rebuildThread==null || rebuildThread.isFinished()) {
+			rebuildThread = new TimeoutRebuilderThread(viewport, 200);
+			rebuildThread.start();
+		}
+	}
+	
+	protected class TimeoutRebuilderThread extends Thread {
+
+		protected final int timeStep = 50;
+		
+		protected final Viewport viewport;
+
+		protected final double timeout;
+		
+		protected double elapsedTime = 0;
+		
+		protected boolean finished = false;
+		
+		public TimeoutRebuilderThread(Viewport viewport, double timeout) {
+			this.viewport = viewport;
+			this.timeout = timeout;
+		}
+		
+		public void run() {
+			while (true) {
+				try {
+					sleep(timeStep);
+				} catch (InterruptedException e) {
+					break;
+				}
+				elapsedTime += timeStep;
+				if (elapsedTime>=timeout) {
+					doRebuild();
+					finished = true;
+					break;
+				}
+			}
+		}
+		
+		public boolean isFinished() {
+			return finished;
+		}
+		
+		protected void doRebuild() {
+			viewport.rebuild();
+		}
 		
 	}
 	

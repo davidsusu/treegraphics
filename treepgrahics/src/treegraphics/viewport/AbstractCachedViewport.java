@@ -3,6 +3,7 @@ package treegraphics.viewport;
 import java.util.List;
 
 import treegraphics.canvas.Canvas;
+import treegraphics.canvas.Color;
 import treegraphics.canvas.Dimension;
 import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
@@ -10,20 +11,21 @@ import treegraphics.canvas.Rectangle;
 
 abstract public class AbstractCachedViewport extends AbstractViewport {
 
-	protected Point origin = new Point(0, 0);
-	
-	protected double zoom = 1;
-
 	protected DrawableService drawableService = new IndexedStoreDrawableService();
 
-	protected DrawableService drawableCacheService = new IndexedStoreDrawableService();
+	protected DrawableService drawableCacheService = null;
 	
-	protected Rectangle drawableCacheRectangle = new Rectangle(0, 0, 0, 0);
+	protected Rectangle drawableCacheRectangle = null;
+	
+	protected BitmapNode renderedBitmapNode = null;
 	
 	protected Rectangle renderedRectangle = new Rectangle(0, 0, 0, 0);
 	
+	protected double renderedZoom = 1;
+	
 	@Override
 	public void addDrawable(Drawable drawable) {
+		requireDrawableCache();
 		drawableService.addDrawable(drawable);
 		if (drawableCacheRectangle.intersects(drawable.getReservedRectangle())) {
 			drawableCacheService.addDrawable(drawable);
@@ -33,6 +35,7 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 
 	@Override
 	public void removeDrawable(Drawable drawable) {
+		requireDrawableCache();
 		drawableService.removeDrawable(drawable);
 		// FIXME: talán jobb, ha ez az ifen kívül marad...
 		drawableCacheService.removeDrawable(drawable);
@@ -43,49 +46,33 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 
 	@Override
 	public void setOrigin(Point origin) {
-		// FIXME: round to pixel...
 		this.origin = origin;
-		refresh();
-	}
-
-	@Override
-	public Point getOrigin() {
-		return origin;
 	}
 
 	@Override
 	public void setZoom(double zoom) {
 		this.zoom = zoom;
-		refresh();
-	}
-
-	@Override
-	public double getZoom() {
-		return zoom;
-	}
-
-	@Override
-	public Rectangle getArea() {
-		Dimension dimension = new Dimension(getWidth()/zoom, getHeight()/zoom);
-		return new Rectangle(origin, dimension);
 	}
 
 	@Override
 	public void refresh() {
-		if (!drawableCacheRectangle.contains(getMinimumDrawableCacheArea()) || !getMaximumDrawableCacheArea().contains(drawableCacheRectangle)) {
-			drawableCacheService.clear();
-			List<Drawable> affectedDrawables = drawableService.getAffectedDrawables(getIdealDrawableCacheArea());
-			for (Drawable drawable: affectedDrawables) {
-				drawableCacheService.addDrawable(drawable);
-			}
-			// TODO: total redraw
-		} else if (!renderedRectangle.contains(getMinimumRenderingArea()) || !getMaximumRenderingArea().contains(renderedRectangle)) {
-			// TODO: partial redraw
+		// FIXME
+		if (renderedBitmapNode==null) {
+			rerenderBitmapNode();
 		}
+		refreshScreen();
+	}
+	
+	@Override
+	public void rebuild() {
+		// FIXME
+		rerenderBitmapNode();
+		refreshScreen();
 	}
 
 	@Override
 	public List<Drawable> getDrawablesAt(Point point) {
+		requireDrawableCache();
 		if (drawableCacheRectangle.containsPoint(point)) {
 			return drawableCacheService.getAffectedDrawables(point);
 		} else {
@@ -93,35 +80,34 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 		}
 	}
 
-	@Override
-	public List<Drawable> getDrawablesAtPixel(int x, int y) {
-		Point point =  new Point(((x+0.5)/zoom)+origin.getX(), ((y+0.5)/zoom)+origin.getY());
-		return getDrawablesAt(point);
-	}
-
 	protected Rectangle getMinimumRenderingArea() {
 		Rectangle area = getArea();
-		return getPaddedRectangle(area, area.getWidth()/2+100, area.getHeight()/2+100);
+		return getPaddedRectangle(area, area.getWidth()/2, area.getHeight()/2);
+	}
+
+	protected Rectangle getOptimalRenderingArea() {
+		Rectangle area = getArea();
+		return getPaddedRectangle(area, area.getWidth()/2+(100/zoom), area.getHeight()/2+(100/zoom));
 	}
 
 	protected Rectangle getMaximumRenderingArea() {
 		Rectangle area = getArea();
-		return getPaddedRectangle(area, area.getWidth()+100, area.getHeight()+100);
+		return getPaddedRectangle(area, area.getWidth()+(100/zoom), area.getHeight()+(100/zoom));
 	}
 	
 	protected Rectangle getMinimumDrawableCacheArea() {
 		Rectangle area = getArea();
-		return getPaddedRectangle(area, area.getWidth()*2+100, area.getHeight()*2+100);
+		return getPaddedRectangle(area, area.getWidth()*2+(100/zoom), area.getHeight()*2+(100/zoom));
 	}
 
-	protected Rectangle getIdealDrawableCacheArea() {
+	protected Rectangle getOptimalDrawableCacheArea() {
 		Rectangle area = getArea();
-		return getPaddedRectangle(area, area.getWidth()*3+100, area.getHeight()*3+100);
+		return getPaddedRectangle(area, area.getWidth()*3+(100/zoom), area.getHeight()*3+(100/zoom));
 	}
 
 	protected Rectangle getMaximumDrawableCacheArea() {
 		Rectangle area = getArea();
-		return getPaddedRectangle(area, area.getWidth()*4+100, area.getHeight()*4+100);
+		return getPaddedRectangle(area, area.getWidth()*4+(100/zoom), area.getHeight()*4+(100/zoom));
 	}
 	
 	protected Rectangle getPaddedRectangle(Rectangle rectangle, double xPadding, double yPadding) {
@@ -140,15 +126,71 @@ abstract public class AbstractCachedViewport extends AbstractViewport {
 		}
 	}
 	
+	// FIXME: partial rerender...
+	protected void rerenderBitmapNode() {
+		rerenderBitmapNodeFully();
+	}
+
+	protected void rerenderBitmapNodeFully() {
+		// TODO: drawableCacheService...
+		
+		Rectangle targetArea = getOptimalRenderingArea();
+		int bitmapWidth = (int)(targetArea.getWidth()*zoom);
+		int bitmapHeight = (int)(targetArea.getHeight()*zoom);
+		renderedBitmapNode = createBitmap(bitmapWidth, bitmapHeight);
+		renderedRectangle = targetArea;
+		renderedZoom = zoom;
+		List<Drawable> drawables = drawableCacheService.getAffectedDrawables(targetArea);
+		
+		Canvas canvas = renderedBitmapNode.getCanvas();
+		canvas.setZoom(zoom);
+		canvas.setAntialiasing(true);
+		
+		Point bitmapOrigin = targetArea.getLeftTop();
+		canvas.setOrigin(bitmapOrigin);
+		
+		canvas.setColor(new Color(255, 255, 255));
+		canvas.fillRectangle(renderedRectangle);
+		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.beforeDraw(canvas, renderedRectangle);
+		}
+
+		for (Drawable drawable: drawables) {
+			drawable.draw(canvas);
+		}
+		
+		for (DrawListener drawListener: drawListeners) {
+			drawListener.afterDraw(canvas, renderedRectangle);
+		}
+	}
+	
+	// FIXME
+	protected void requireDrawableCache() {
+		drawableCacheService = new IndexedStoreDrawableService();
+		drawableCacheRectangle = getOptimalDrawableCacheArea();
+		for (Drawable drawable: drawableService.getAffectedDrawables(drawableCacheRectangle)) {
+			drawableCacheService.addDrawable(drawable);
+		}
+	}
+
+	abstract protected void refreshScreen();
+	
+	abstract protected BitmapNode createBitmap(int width, int height);
+	
 	protected interface BitmapNode {
 
 		public BitmapNode createParent(int width, int height);
 
 		public BitmapNode createChild(int width, int height);
 		
-		public void copyToParent(int left, int top);
+		public void copyToParent(int left, int top, int width, int height, int parentLeft, int parentTop);
 		
 		public Canvas getCanvas();
+		
+		public int getWidth();
+		
+		public int getHeight();
 		
 	}
 	

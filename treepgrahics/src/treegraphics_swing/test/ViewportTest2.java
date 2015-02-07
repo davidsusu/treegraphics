@@ -20,9 +20,46 @@ import treegraphics_swing.SwingSimpleViewport;
 public class ViewportTest2 {
 	
 	public static void main(String[] args) {
-		SwingSimpleViewport viewport = new SwingSimpleViewport();
+		final SwingSimpleViewport viewport = new SwingSimpleViewport() {
+			
+			@Override
+			public int getWidth() {
+				return 500;
+			}
+
+			@Override
+			public int getHeight() {
+				return 300;
+			}
+
+			@Override
+			public int getXDisplacement() {
+				return 200;
+			}
+
+			@Override
+			public int getYDisplacement() {
+				return 100;
+			}
+			
+		};
 		
 		viewport.addDrawListener(new Viewport.DrawListener() {
+
+			@Override
+			public void beforeRefresh(Canvas canvas, Rectangle area) {
+				canvas.setColor(new Color(255, 0, 0));
+				canvas.fillRectangle(viewport.getFullArea());
+				
+				canvas.setColor(new Color(255, 255, 255));
+				canvas.fillRectangle(area);
+				
+				Rectangle drawRectangle = new Rectangle(250, 90, 600, 120);
+				if (drawRectangle.intersects(area)) {
+					canvas.setColor(new Color(50, 0, 200));
+					canvas.fillRectangle(drawRectangle);
+				}
+			}
 			
 			@Override
 			public void beforeDraw(Canvas canvas, Rectangle area) {
@@ -33,6 +70,13 @@ public class ViewportTest2 {
 				canvas.setColor(new Color(200, 100, 0));
 				canvas.fillRectangle(new Rectangle(10, 10, 300, 30));
 			}
+			
+			@Override
+			public void afterRefresh(Canvas canvas, Rectangle area) {
+				canvas.setColor(new Color(100, 0, 100));
+				canvas.fillRectangle(new Rectangle(10, 50, 200, 80));
+			}
+			
 		});
 		
 		final Value valueX0 = new StaticValue(100);

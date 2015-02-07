@@ -90,6 +90,11 @@ public class Graphics2DCanvas implements Canvas {
 	}
 
 	@Override
+	public void drawRectangle(Rectangle rectangle) {
+		g2d.draw(new Rectangle2D.Double(rectangle.getLeft(), rectangle.getTop(), rectangle.getWidth(), rectangle.getHeight()));
+	}
+
+	@Override
 	public void drawLine(Point point1, Point point2) {
 		g2d.draw(new Line2D.Double(point1.getX(), point1.getY(), point2.getX(), point2.getY()));
 	}

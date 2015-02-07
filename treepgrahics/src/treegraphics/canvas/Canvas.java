@@ -22,6 +22,8 @@ public interface Canvas {
 
 	public void fillRectangle(Rectangle rectangle);
 
+	public void drawRectangle(Rectangle rectangle);
+
 	public void drawLine(Point point1, Point point2);
 	
 	// TODO

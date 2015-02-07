@@ -1,6 +1,7 @@
 package treegraphics_swing;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
@@ -19,7 +20,7 @@ public class SwingCachedViewport extends AwtCachedViewport implements SwingViewp
 			
 			@Override
 			protected void paintComponent(Graphics g) {
-				// TODO
+				SwingCachedViewport.this.repaintScreen((Graphics2D)g);
 			}
 			
 		};
