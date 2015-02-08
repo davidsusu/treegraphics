@@ -19,29 +19,7 @@ import treegraphics_swing.SwingCachedViewport;
 public class ViewportTest3 {
 
 	public static void main(String[] args) {
-		final SwingCachedViewport viewport = new SwingCachedViewport() {
-			
-			@Override
-			public int getWidth() {
-				return 100;
-			}
-
-			@Override
-			public int getHeight() {
-				return 100;
-			}
-
-			@Override
-			public int getXDisplacement() {
-				return 300;
-			}
-
-			@Override
-			public int getYDisplacement() {
-				return 200;
-			}
-			
-		};
+		final SwingCachedViewport viewport = new SwingCachedViewport();
 		
 		viewport.addDrawListener(new Viewport.DrawListener() {
 
@@ -83,10 +61,10 @@ public class ViewportTest3 {
 		Value valueX2 = new StaticValue(500);
 		Value valueY2 = new StaticValue(300);
 		
-		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX2, valueY2, new StaticValue(2), new Color(0, 0, 0)));
+		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX2, valueY2, new StaticValue(1), new Color(0, 0, 0)));
 
 		viewport.addDrawable(new TestPoint(valueX1, valueY1, new StaticValue(2), 10, new Color(255, 0, 0)));
-		viewport.addDrawable(new TestPoint(valueX2, valueY2, new StaticValue(2), 10, new Color(0, 0, 255)));
+		viewport.addDrawable(new TestPoint(valueX2, valueY2, new StaticValue(3), 10, new Color(0, 0, 255)));
 		
 		final Component component = viewport.getComponent();
 		component.setPreferredSize(new java.awt.Dimension(800, 500));
@@ -99,6 +77,8 @@ public class ViewportTest3 {
 		frame.getContentPane().add(component, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
+		
+		viewport.rebuild();
 	}
 
 }

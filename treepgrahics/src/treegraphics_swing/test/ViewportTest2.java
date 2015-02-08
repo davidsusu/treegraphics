@@ -20,29 +20,7 @@ import treegraphics_swing.SwingSimpleViewport;
 public class ViewportTest2 {
 	
 	public static void main(String[] args) {
-		final SwingSimpleViewport viewport = new SwingSimpleViewport() {
-			
-			@Override
-			public int getWidth() {
-				return 500;
-			}
-
-			@Override
-			public int getHeight() {
-				return 300;
-			}
-
-			@Override
-			public int getXDisplacement() {
-				return 200;
-			}
-
-			@Override
-			public int getYDisplacement() {
-				return 100;
-			}
-			
-		};
+		final SwingSimpleViewport viewport = new SwingSimpleViewport();
 		
 		viewport.addDrawListener(new Viewport.DrawListener() {
 
@@ -108,7 +86,7 @@ public class ViewportTest2 {
 
 		viewport.addDrawable(new TestPoint(valueX3, valueY3, new StaticValue(6), 10, new Color(0, 0, 255)));
 		viewport.addDrawable(new TestPoint(valueX4, valueY4, new StaticValue(7), 10, new Color(255, 0, 255)));
-
+		
 		final Component component = viewport.getComponent();
 		component.setPreferredSize(new java.awt.Dimension(800, 500));
 		
@@ -120,6 +98,8 @@ public class ViewportTest2 {
 		frame.getContentPane().add(component, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
+		
+		viewport.rebuild();
 	}
 	
 }

@@ -1,6 +1,7 @@
 package treegraphics.viewport;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -46,9 +47,23 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 	}
 
 	@Override
+	public void addDrawables(Collection<Drawable> drawables) {
+		for (Drawable drawable: drawables) {
+			addDrawable(drawable);
+		}
+	}
+
+	@Override
 	public void removeDrawable(Drawable drawable) {
 		store.removeItem(drawable);
 		drawable.unregisterDependent(this);
+	}
+
+	@Override
+	public void removeDrawables(Collection<Drawable> drawables) {
+		for (Drawable drawable: drawables) {
+			removeDrawable(drawable);
+		}
 	}
 
 	@Override
@@ -122,7 +137,7 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		}
 	}
 
-	protected class LeftDrawableComparator implements Comparator<Drawable> {
+	public class LeftDrawableComparator implements Comparator<Drawable> {
 
 		@Override
 		public int compare(Drawable drawable1, Drawable drawable2) {
@@ -131,7 +146,7 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		
 	}
 
-	protected class TopDrawableComparator implements Comparator<Drawable> {
+	public class TopDrawableComparator implements Comparator<Drawable> {
 
 		@Override
 		public int compare(Drawable drawable1, Drawable drawable2) {
@@ -140,7 +155,7 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		
 	}
 	
-	protected class RightDrawableComparator implements Comparator<Drawable> {
+	public class RightDrawableComparator implements Comparator<Drawable> {
 
 		@Override
 		public int compare(Drawable drawable1, Drawable drawable2) {
@@ -149,7 +164,7 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		
 	}
 	
-	protected class BottomDrawableComparator implements Comparator<Drawable> {
+	public class BottomDrawableComparator implements Comparator<Drawable> {
 
 		@Override
 		public int compare(Drawable drawable1, Drawable drawable2) {
@@ -158,7 +173,7 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		
 	}
 	
-	protected static class ZDrawableComparator implements Comparator<Drawable> {
+	public static class ZDrawableComparator implements Comparator<Drawable> {
 
 		@Override
 		public int compare(Drawable drawable1, Drawable drawable2) {

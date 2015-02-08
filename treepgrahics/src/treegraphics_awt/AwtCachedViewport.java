@@ -39,9 +39,7 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 	}
 	
 	protected void repaintScreen(Graphics2D g) {
-		// TODO
 		if (renderedBitmapNode==null) {
-			// FIXME
 			return;
 		}
 		
@@ -131,7 +129,7 @@ public class AwtCachedViewport extends AbstractCachedViewport implements AwtView
 		public void copyToParent(int left, int top, int width, int height, int parentLeft, int parentTop) {
 			if (parentBitmapNode!=null) {
 				Graphics2D g2d = parentBitmapNode.image.createGraphics();
-				g2d.drawImage(image, left, top, width, height, parentLeft, parentTop, parentLeft+width, parentTop+height, null);
+				g2d.drawImage(image, parentLeft, parentTop, parentLeft+width, parentTop+height, left, top, left+width, top+height, null);
 			}
 		}
 

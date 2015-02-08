@@ -152,6 +152,25 @@ public class Rectangle implements Shape {
 		);
 	}
 	
+	public Rectangle getIntersectionWith(Rectangle other) {
+		if (!this.intersects(other)) {
+			return null;
+		}
+		double newLeft = Math.max(this.getLeft(), other.getLeft());
+		double newTop= Math.max(this.getTop(), other.getTop());
+		double newRight = Math.min(this.getRight(), other.getRight());
+		double newBottom= Math.min(this.getBottom(), other.getBottom());
+		return new Rectangle(new Point(newLeft, newTop), new Point(newRight, newBottom));
+	}
+
+	public Rectangle getExtendedWith(Rectangle other) {
+		double newLeft = Math.min(this.getLeft(), other.getLeft());
+		double newTop= Math.min(this.getTop(), other.getTop());
+		double newRight = Math.max(this.getRight(), other.getRight());
+		double newBottom= Math.max(this.getBottom(), other.getBottom());
+		return new Rectangle(new Point(newLeft, newTop), new Point(newRight, newBottom));
+	}
+	
 	@Override
 	public String toString() {
 		return "Rectangle("+point1+"; "+point2+")";

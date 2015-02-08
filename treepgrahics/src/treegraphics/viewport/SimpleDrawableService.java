@@ -1,6 +1,7 @@
 package treegraphics.viewport;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,8 +35,18 @@ public class SimpleDrawableService extends AbstractDrawableService {
 	}
 
 	@Override
+	public void addDrawables(Collection<Drawable> drawables) {
+		drawables.addAll(drawables);
+	}
+
+	@Override
 	public void removeDrawable(Drawable drawable) {
 		drawables.remove(drawable);
+	}
+
+	@Override
+	public void removeDrawables(Collection<Drawable> drawables) {
+		drawables.removeAll(drawables);
 	}
 
 	@Override

@@ -77,6 +77,8 @@ public class ViewportTest1 {
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
+		
+		viewport.rebuild();
 	}
 	
 }
