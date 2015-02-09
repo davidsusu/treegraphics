@@ -1,6 +1,8 @@
 package treegraphics_awt.test;
 
 import java.awt.Component;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -12,7 +14,7 @@ import treegraphics.canvas.Drawable;
 import treegraphics.canvas.Point;
 import treegraphics.viewport.Viewport;
 
-public class TestMoveInteractionHandler {
+public class TestInteractionHandler {
 	
 	protected final Viewport viewport;
 	
@@ -30,7 +32,7 @@ public class TestMoveInteractionHandler {
 	
 	protected TimeoutRebuilderThread rebuildThread = null;
 	
-	public TestMoveInteractionHandler(Viewport viewport, Component component) {
+	public TestInteractionHandler(Viewport viewport, Component component) {
 		this.component = component;
 		this.viewport = viewport;
 	}
@@ -148,7 +150,7 @@ public class TestMoveInteractionHandler {
 				viewport.setZoom(newZoom);
 				viewport.setOrigin(newOrigin);
 
-				TestMoveInteractionHandler.this.startRebuild();
+				TestInteractionHandler.this.startRebuild();
 				viewport.refresh();
 				
 				if (dragStartPosition!=null && dragStartOrigin!=null) {
@@ -158,6 +160,66 @@ public class TestMoveInteractionHandler {
 				}
 			}
 		});
+		
+		component.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent ev) {
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent ev) {
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent ev) {
+				Point origin = viewport.getOrigin();
+				double zoom = viewport.getZoom();
+				switch (ev.getKeyCode()) {
+					case 37:
+						viewport.setOrigin(new Point(origin.getX()+(50/zoom), origin.getY()));
+						viewport.rebuild();
+					break;
+					case 38:
+						viewport.setOrigin(new Point(origin.getX(), origin.getY()+(50/zoom)));
+						viewport.rebuild();
+					break;
+					case 39:
+						viewport.setOrigin(new Point(origin.getX()-(50/zoom), origin.getY()));
+						viewport.rebuild();
+					break;
+					case 40:
+						viewport.setOrigin(new Point(origin.getX(), origin.getY()-(50/zoom)));
+						viewport.rebuild();
+					break;
+					
+					// TODO: screen center as zoom origin
+					case 49:
+						viewport.setZoom(1);
+						viewport.rebuild();
+						break;
+					case 50:
+						viewport.setZoom(2);
+						viewport.rebuild();
+						break;
+					case 51:
+						viewport.setZoom(3);
+						viewport.rebuild();
+						break;
+					case 68:
+						viewport.setZoom(viewport.getZoom()*0.9);
+						viewport.rebuild();
+						break;
+					case 69:
+						viewport.setZoom(viewport.getZoom()/0.9);
+						viewport.rebuild();
+						break;
+				}
+			}
+			
+		});
+		
+		component.setFocusable(true);
 		
 	}
 	

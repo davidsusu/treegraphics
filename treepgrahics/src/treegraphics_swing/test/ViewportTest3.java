@@ -12,7 +12,7 @@ import treegraphics.valuetree.DoubleValue;
 import treegraphics.valuetree.doublevalue.StaticValue;
 import treegraphics.viewport.Viewport;
 import treegraphics_awt.test.TestLine;
-import treegraphics_awt.test.TestMoveInteractionHandler;
+import treegraphics_awt.test.TestInteractionHandler;
 import treegraphics_awt.test.TestPoint;
 import treegraphics_swing.SwingCachedViewport;
 
@@ -69,7 +69,7 @@ public class ViewportTest3 {
 		final Component component = viewport.getComponent();
 		component.setPreferredSize(new java.awt.Dimension(800, 500));
 		
-		final TestMoveInteractionHandler interactionHandler = new TestMoveInteractionHandler(viewport, component);
+		final TestInteractionHandler interactionHandler = new TestInteractionHandler(viewport, component);
 		interactionHandler.init();
 		
 		JFrame frame = new JFrame("Viewport test");
