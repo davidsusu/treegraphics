@@ -1,4 +1,4 @@
-package treegraphics_swing;
+package treegraphics_swing.test;
 
 import treegraphics.canvas.Color;
 import treegraphics.valuetree.AbstractCustomValue;
