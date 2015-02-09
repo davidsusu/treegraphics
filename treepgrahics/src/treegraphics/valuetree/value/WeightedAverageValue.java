@@ -3,10 +3,10 @@ package treegraphics.valuetree.value;
 import java.util.ArrayList;
 import java.util.List;
 
-import treegraphics.valuetree.AbstractValue;
-import treegraphics.valuetree.Value;
+import treegraphics.valuetree.AbstractDoubleValue;
+import treegraphics.valuetree.DoubleValue;
 
-public class WeightedAverageValue extends AbstractValue {
+public class WeightedAverageValue extends AbstractDoubleValue {
 
 	final List<Entry> sourceEntries = new ArrayList<Entry>();
 	
@@ -51,15 +51,15 @@ public class WeightedAverageValue extends AbstractValue {
 
 	public static class Entry {
 
-		protected final Value source;
+		protected final DoubleValue source;
 
 		protected final double weight;
 		
-		public Entry(Value source) {
+		public Entry(DoubleValue source) {
 			this(source, 1);
 		}
 
-		public Entry(Value source, double weight) {
+		public Entry(DoubleValue source, double weight) {
 			if (weight<=0) {
 				throw new RuntimeException("Weight must be greater than zero");
 			}

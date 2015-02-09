@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
 import treegraphics.canvas.Rectangle;
-import treegraphics.valuetree.Value;
+import treegraphics.valuetree.DoubleValue;
 import treegraphics.valuetree.value.AverageValue;
 import treegraphics.valuetree.value.StaticValue;
 import treegraphics.viewport.Viewport;
@@ -57,21 +57,21 @@ public class ViewportTest2 {
 			
 		});
 		
-		final Value valueX0 = new StaticValue(100);
-		final Value valueY0 = new StaticValue(100);
+		final DoubleValue valueX0 = new StaticValue(100);
+		final DoubleValue valueY0 = new StaticValue(100);
 
-		final Value valueX1 = new StaticValue(300);
-		final Value valueY1 = new StaticValue(300);
-		final Value valueX2 = new StaticValue(500);
-		final Value valueY2 = new StaticValue(100);
+		final DoubleValue valueX1 = new StaticValue(300);
+		final DoubleValue valueY1 = new StaticValue(300);
+		final DoubleValue valueX2 = new StaticValue(500);
+		final DoubleValue valueY2 = new StaticValue(100);
 
-		final Value valueX3 = new StaticValue(400);
-		final Value valueY3 = new StaticValue(400);
-		final Value valueX4 = new StaticValue(600);
-		final Value valueY4 = new StaticValue(200);
+		final DoubleValue valueX3 = new StaticValue(400);
+		final DoubleValue valueY3 = new StaticValue(400);
+		final DoubleValue valueX4 = new StaticValue(600);
+		final DoubleValue valueY4 = new StaticValue(200);
 
-		final Value valueX5 = new AverageValue(valueX1, valueX2, valueX3, valueX4);
-		final Value valueY5 = new AverageValue(valueY1, valueY2, valueY3, valueY4);
+		final DoubleValue valueX5 = new AverageValue(valueX1, valueX2, valueX3, valueX4);
+		final DoubleValue valueY5 = new AverageValue(valueY1, valueY2, valueY3, valueY4);
 
 		viewport.addDrawable(new TestPoint(valueX0, valueY0, new StaticValue(0), 10, new Color(150, 150, 150)));
 		

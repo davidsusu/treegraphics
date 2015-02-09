@@ -1,6 +1,6 @@
 package treegraphics.valuetree;
 
-public interface SourceValue extends Value {
+public interface SourceDoubleValue extends DoubleValue {
 
 	public void set(double value);
 	

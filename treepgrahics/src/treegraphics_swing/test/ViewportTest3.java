@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
 import treegraphics.canvas.Rectangle;
-import treegraphics.valuetree.Value;
+import treegraphics.valuetree.DoubleValue;
 import treegraphics.valuetree.value.StaticValue;
 import treegraphics.viewport.Viewport;
 import treegraphics_awt.test.TestLine;
@@ -56,10 +56,10 @@ public class ViewportTest3 {
 		});
 		
 		
-		Value valueX1 = new StaticValue(100);
-		Value valueY1 = new StaticValue(100);
-		Value valueX2 = new StaticValue(500);
-		Value valueY2 = new StaticValue(300);
+		DoubleValue valueX1 = new StaticValue(100);
+		DoubleValue valueY1 = new StaticValue(100);
+		DoubleValue valueX2 = new StaticValue(500);
+		DoubleValue valueY2 = new StaticValue(300);
 		
 		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX2, valueY2, new StaticValue(1), new Color(0, 0, 0)));
 

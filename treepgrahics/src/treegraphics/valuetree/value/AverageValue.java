@@ -3,28 +3,28 @@ package treegraphics.valuetree.value;
 import java.util.ArrayList;
 import java.util.List;
 
-import treegraphics.valuetree.AbstractValue;
-import treegraphics.valuetree.Value;
+import treegraphics.valuetree.AbstractDoubleValue;
+import treegraphics.valuetree.DoubleValue;
 
-public class AverageValue extends AbstractValue {
+public class AverageValue extends AbstractDoubleValue {
 
-	final List<Value> sources = new ArrayList<Value>();
+	final List<DoubleValue> sources = new ArrayList<DoubleValue>();
 	
-	public AverageValue(Value firstSource, Value... sources) {
+	public AverageValue(DoubleValue firstSource, DoubleValue... sources) {
 		initSources(firstSource, sources);
 	}
 
-	public void setSources(Value firstSource, Value... sources) {
-		for (Value source: this.sources) {
+	public void setSources(DoubleValue firstSource, DoubleValue... sources) {
+		for (DoubleValue source: this.sources) {
 			source.unregisterDependent(this);
 		}
 		this.sources.clear();
 		initSources(firstSource, sources);
 	}
-	public void initSources(Value firstSource, Value... sources) {
+	public void initSources(DoubleValue firstSource, DoubleValue... sources) {
 		this.sources.add(firstSource);
 		firstSource.registerDependent(this);
-		for (Value source : sources) {
+		for (DoubleValue source : sources) {
 			this.sources.add(source);
 			source.registerDependent(this);
 		}
@@ -32,7 +32,7 @@ public class AverageValue extends AbstractValue {
 	
 	@Override
 	public void freeFromDependecies() {
-		for (Value source: sources) {
+		for (DoubleValue source: sources) {
 			source.unregisterDependent(this);
 		}
 	}
@@ -40,7 +40,7 @@ public class AverageValue extends AbstractValue {
 	@Override
 	protected void reload() {
 		double sum = 0;
-		for (Value source: sources) {
+		for (DoubleValue source: sources) {
 			sum += source.get();
 		}
 		cachedValue = sum/sources.size();

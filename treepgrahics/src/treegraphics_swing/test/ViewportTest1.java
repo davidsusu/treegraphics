@@ -8,7 +8,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
 
 import treegraphics.canvas.Color;
-import treegraphics.valuetree.Value;
+import treegraphics.valuetree.DoubleValue;
 import treegraphics.valuetree.value.AverageValue;
 import treegraphics.valuetree.value.StaticValue;
 import treegraphics_awt.test.TestLine;
@@ -26,14 +26,14 @@ public class ViewportTest1 {
 		final StaticValue valueY2 = new StaticValue(100);
 		final StaticValue valueX3 = new StaticValue(400);
 		final StaticValue valueY3 = new StaticValue(420);
-		final Value valueX4 = new AverageValue(valueX1, valueX2, valueX3);
-		final Value valueY4 = new AverageValue(valueY1, valueY2, valueY3);
-		final Value valueX5 = new AverageValue(valueX1, valueX2);
-		final Value valueY5 = new AverageValue(valueY1, valueY2);
-		final Value valueX6 = new AverageValue(valueX1, valueX3);
-		final Value valueY6 = new AverageValue(valueY1, valueY3);
-		final Value valueX7 = new AverageValue(valueX2, valueX3);
-		final Value valueY7 = new AverageValue(valueY2, valueY3);
+		final DoubleValue valueX4 = new AverageValue(valueX1, valueX2, valueX3);
+		final DoubleValue valueY4 = new AverageValue(valueY1, valueY2, valueY3);
+		final DoubleValue valueX5 = new AverageValue(valueX1, valueX2);
+		final DoubleValue valueY5 = new AverageValue(valueY1, valueY2);
+		final DoubleValue valueX6 = new AverageValue(valueX1, valueX3);
+		final DoubleValue valueY6 = new AverageValue(valueY1, valueY3);
+		final DoubleValue valueX7 = new AverageValue(valueX2, valueX3);
+		final DoubleValue valueY7 = new AverageValue(valueY2, valueY3);
 
 		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX2, valueY2, new StaticValue(1), new Color(0, 0, 0)));
 		viewport.addDrawable(new TestLine(valueX1, valueY1, valueX3, valueY3, new StaticValue(2), new Color(0, 0, 0)));

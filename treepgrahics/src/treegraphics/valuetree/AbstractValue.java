@@ -1,15 +1,13 @@
 package treegraphics.valuetree;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import treegraphics.util.CachedState;
 
 abstract public class AbstractValue implements Value {
 
 	protected boolean isExpired = true;
-	
-	protected double cachedValue = 0;
 	
 	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
 	
@@ -42,14 +40,12 @@ abstract public class AbstractValue implements Value {
 		dependents.remove(cachedState);
 	}
 
-	@Override
-	public double get() {
+	protected void beforeGet() {
 		if (isExpired) {
 			reload();
 			expiredDependencies.clear();
 			isExpired = false;
 		}
-		return cachedValue;
 	}
 	
 	abstract protected void reload();

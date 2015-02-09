@@ -11,18 +11,18 @@ import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 import treegraphics.util.CachedState;
 import treegraphics.util.Identified;
-import treegraphics.valuetree.SourceValue;
-import treegraphics.valuetree.Value;
+import treegraphics.valuetree.SourceDoubleValue;
+import treegraphics.valuetree.DoubleValue;
 
 public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	
 	final protected int id;
 	
-	protected Value xValue;
+	protected DoubleValue xValue;
 	
-	protected Value yValue;
+	protected DoubleValue yValue;
 
-	protected Value zValue;
+	protected DoubleValue zValue;
 	
 	protected double radius;
 	
@@ -34,7 +34,7 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	
 	final protected List<CachedState> dependents = new ArrayList<CachedState>();
 	
-	public TestPoint(Value xValue, Value yValue, Value zValue, double radius, Color color) {
+	public TestPoint(DoubleValue xValue, DoubleValue yValue, DoubleValue zValue, double radius, Color color) {
 		this.xValue = xValue;
 		this.yValue = yValue;
 		this.zValue = zValue;
@@ -70,11 +70,11 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	@Override
 	public void moveTo(Point leftTopPoint) {
 		if (
-			xValue instanceof SourceValue
-			&& yValue instanceof SourceValue
+			xValue instanceof SourceDoubleValue
+			&& yValue instanceof SourceDoubleValue
 		) {
-			((SourceValue)xValue).set(leftTopPoint.getX()+radius);
-			((SourceValue)yValue).set(leftTopPoint.getY()+radius);
+			((SourceDoubleValue)xValue).set(leftTopPoint.getX()+radius);
+			((SourceDoubleValue)yValue).set(leftTopPoint.getY()+radius);
 		}
 	}
 	

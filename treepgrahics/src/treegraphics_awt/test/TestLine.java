@@ -10,22 +10,22 @@ import treegraphics.canvas.Point;
 import treegraphics.canvas.Rectangle;
 import treegraphics.util.CachedState;
 import treegraphics.util.Identified;
-import treegraphics.valuetree.SourceValue;
-import treegraphics.valuetree.Value;
+import treegraphics.valuetree.SourceDoubleValue;
+import treegraphics.valuetree.DoubleValue;
 
 public class TestLine implements Drawable, TestMovableDrawable, Identified {
 
 	final protected int id;
 	
-	protected Value x1Value;
+	protected DoubleValue x1Value;
 	
-	protected Value y1Value;
+	protected DoubleValue y1Value;
 	
-	protected Value x2Value;
+	protected DoubleValue x2Value;
 	
-	protected Value y2Value;
+	protected DoubleValue y2Value;
 	
-	protected Value zValue;
+	protected DoubleValue zValue;
 	
 	protected Color color;
 
@@ -35,7 +35,7 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 	
 	final protected List<CachedState> dependents = new ArrayList<CachedState>();
 	
-	public TestLine(Value x1Value, Value y1Value, Value x2Value, Value y2Value, Value zValue, Color color) {
+	public TestLine(DoubleValue x1Value, DoubleValue y1Value, DoubleValue x2Value, DoubleValue y2Value, DoubleValue zValue, Color color) {
 		this.x1Value = x1Value;
 		this.y1Value = y1Value;
 		this.x2Value = x2Value;
@@ -86,10 +86,10 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 	@Override
 	public void moveTo(Point leftTopPoint) {
 		if (
-			x1Value instanceof SourceValue
-			&& y1Value instanceof SourceValue
-			&& x2Value instanceof SourceValue
-			&& y2Value instanceof SourceValue
+			x1Value instanceof SourceDoubleValue
+			&& y1Value instanceof SourceDoubleValue
+			&& x2Value instanceof SourceDoubleValue
+			&& y2Value instanceof SourceDoubleValue
 		) {
 			double x1 = x1Value.get();
 			double y1 = y1Value.get();
@@ -100,18 +100,18 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 			double width = Math.abs(x2-x1);
 			double height = Math.abs(y2-y1);
 			if (x1>x2) {
-				((SourceValue)x1Value).set(destX+width);
-				((SourceValue)x2Value).set(destX);
+				((SourceDoubleValue)x1Value).set(destX+width);
+				((SourceDoubleValue)x2Value).set(destX);
 			} else {
-				((SourceValue)x1Value).set(destX);
-				((SourceValue)x2Value).set(destX+width);
+				((SourceDoubleValue)x1Value).set(destX);
+				((SourceDoubleValue)x2Value).set(destX+width);
 			}
 			if (y1>y2) {
-				((SourceValue)y1Value).set(destY+height);
-				((SourceValue)y2Value).set(destY);
+				((SourceDoubleValue)y1Value).set(destY+height);
+				((SourceDoubleValue)y2Value).set(destY);
 			} else {
-				((SourceValue)y1Value).set(destY);
-				((SourceValue)y2Value).set(destY+height);
+				((SourceDoubleValue)y1Value).set(destY);
+				((SourceDoubleValue)y2Value).set(destY+height);
 			}
 		}
 	}
