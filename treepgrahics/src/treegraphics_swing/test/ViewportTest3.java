@@ -9,7 +9,7 @@ import treegraphics.canvas.Canvas;
 import treegraphics.canvas.Color;
 import treegraphics.canvas.Rectangle;
 import treegraphics.valuetree.DoubleValue;
-import treegraphics.valuetree.value.StaticValue;
+import treegraphics.valuetree.doublevalue.StaticValue;
 import treegraphics.viewport.Viewport;
 import treegraphics_awt.test.TestLine;
 import treegraphics_awt.test.TestMoveInteractionHandler;

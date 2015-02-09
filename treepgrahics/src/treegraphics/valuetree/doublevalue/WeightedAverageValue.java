@@ -1,4 +1,4 @@
-package treegraphics.valuetree.value;
+package treegraphics.valuetree.doublevalue;
 
 import java.util.ArrayList;
 import java.util.List;

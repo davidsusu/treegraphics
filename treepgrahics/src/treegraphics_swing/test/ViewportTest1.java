@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 
 import treegraphics.canvas.Color;
 import treegraphics.valuetree.DoubleValue;
-import treegraphics.valuetree.value.AverageValue;
-import treegraphics.valuetree.value.StaticValue;
+import treegraphics.valuetree.doublevalue.AverageValue;
+import treegraphics.valuetree.doublevalue.StaticValue;
 import treegraphics_awt.test.TestLine;
 import treegraphics_awt.test.TestPoint;
 import treegraphics_swing.SwingSimpleViewport;

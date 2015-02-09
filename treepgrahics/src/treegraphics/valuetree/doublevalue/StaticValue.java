@@ -1,4 +1,4 @@
-package treegraphics.valuetree.value;
+package treegraphics.valuetree.doublevalue;
 
 import treegraphics.valuetree.AbstractDoubleValue;
 import treegraphics.valuetree.SourceDoubleValue;
