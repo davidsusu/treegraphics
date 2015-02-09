@@ -177,19 +177,19 @@ public class TestInteractionHandler {
 				double zoom = viewport.getZoom();
 				switch (ev.getKeyCode()) {
 					case 37:
-						viewport.setOrigin(new Point(origin.getX()+(50/zoom), origin.getY()));
-						viewport.rebuild();
-					break;
-					case 38:
-						viewport.setOrigin(new Point(origin.getX(), origin.getY()+(50/zoom)));
-						viewport.rebuild();
-					break;
-					case 39:
 						viewport.setOrigin(new Point(origin.getX()-(50/zoom), origin.getY()));
 						viewport.rebuild();
 					break;
-					case 40:
+					case 38:
 						viewport.setOrigin(new Point(origin.getX(), origin.getY()-(50/zoom)));
+						viewport.rebuild();
+					break;
+					case 39:
+						viewport.setOrigin(new Point(origin.getX()+(50/zoom), origin.getY()));
+						viewport.rebuild();
+					break;
+					case 40:
+						viewport.setOrigin(new Point(origin.getX(), origin.getY()+(50/zoom)));
 						viewport.rebuild();
 					break;
 					
