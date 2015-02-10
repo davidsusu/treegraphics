@@ -18,9 +18,7 @@ abstract public class AbstractValue implements Value {
 		ExpireEvent ev = new ExpireEvent(this);
 		isExpired = true;
 		for (CachedState dependent: dependents) {
-			// FIXME
-			//dependent.expireState(ev);
-			dependent.expireState_old(this);
+			dependent.expireState(ev);
 		}
 		for (CachedState dependent: dependents) {
 			dependent.onExpirationFinished(ev);
@@ -31,11 +29,11 @@ abstract public class AbstractValue implements Value {
 	@Override
 	public void expireState(ExpireEvent ev) {
 		isExpired = true;
+		ev.push(this);
 		for (CachedState dependent: dependents) {
-			// FIXME
-			//dependent.expireState(ev);
-			dependent.expireState_old(this);
+			dependent.expireState(ev);
 		}
+		ev.pop(this);
 	}
 
 	@Override
@@ -68,25 +66,5 @@ abstract public class AbstractValue implements Value {
 	}
 	
 	abstract protected void reload();
-
 	
-	
-	
-	
-	
-
-	// TODO: remove
-	@Override
-	public void expireState_old() {
-		isExpired = true;
-		for (CachedState dependent: dependents) {
-			dependent.expireState_old(this);
-		}
-	}
-
-	@Override
-	public void expireState_old(CachedState cachedState) {
-		expiredDependencies.add(cachedState);
-		expireState_old();
-	}
 }

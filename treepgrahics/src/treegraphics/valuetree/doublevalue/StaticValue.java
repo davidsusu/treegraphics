@@ -13,10 +13,7 @@ public class StaticValue extends AbstractDoubleValue implements SourceDoubleValu
 	
 	public void set(double value) {
 		this.value = value;
-		
-		// FIXME
-		//expireState();
-		expireState_old();
+		expireState();
 	}
 	
 	@Override

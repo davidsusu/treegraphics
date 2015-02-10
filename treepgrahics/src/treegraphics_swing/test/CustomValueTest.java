@@ -40,7 +40,7 @@ public class CustomValueTest {
 		}
 		
 		public void setColor(Color color) {
-			this.expireState_old(this);
+			this.expireState();
 			this.color = color;
 		}
 		
@@ -69,7 +69,7 @@ public class CustomValueTest {
 			if (this.base!=null) {
 				this.base.unregisterDependent(this);
 			}
-			this.expireState_old(this);
+			this.expireState();
 			base.registerDependent(this);
 			this.base = base;
 		}

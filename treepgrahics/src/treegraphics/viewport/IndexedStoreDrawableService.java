@@ -125,6 +125,23 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		}
 	}
 
+	@Override
+	public void expireState(ExpireEvent ev) {
+		CachedState cachedState = ev.getLast();
+		if (cachedState instanceof Drawable) {
+			Drawable drawable = (Drawable)cachedState;
+			if (store.hasItem(drawable)) {
+				store.updateItem(drawable);
+			}
+		}
+		super.expireState(ev);
+	}
+	
+	@Override
+	protected void onExpirationFinishedOnce(ExpireEvent ev) {
+		
+	}
+
 	public class LeftDrawableComparator implements Comparator<Drawable> {
 
 		@Override
@@ -169,26 +186,6 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		}
 		
 	}
-
-	
-	
-	
-	// TODO: remove
-	
-	@Override
-	public void expireState_old(CachedState cachedState) {
-		if (cachedState instanceof Drawable) {
-			Drawable drawable = (Drawable)cachedState;
-			if (store.hasItem(drawable)) {
-				store.updateItem(drawable);
-			}
-		}
-		expiredDependencies.add(cachedState);
-		expireState_old();
-	}
-	
-	
-	
 	
 	protected class FakeDrawable implements Drawable {
 		
@@ -223,18 +220,17 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 
 		@Override
 		public ExpireEvent expireState() {
-			// TODO
-			return null;
+			throw new RuntimeException("Event handling not supported with fake object");
 		}
 
 		@Override
 		public void expireState(ExpireEvent ev) {
-			// TODO
+			throw new RuntimeException("Event handling not supported with fake object");
 		}
 
 		@Override
 		public void onExpirationFinished(ExpireEvent ev) {
-			// TODO
+			throw new RuntimeException("Event handling not supported with fake object");
 		}
 		
 		@Override
@@ -252,18 +248,6 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		@Override
 		public String toString() {
 			return "FakeDrawable("+point1+"; "+point2+")";
-		}
-		
-		
-		
-		
-		// TODO: remove
-		@Override
-		public void expireState_old() {
-		}
-
-		@Override
-		public void expireState_old(CachedState cachedState) {
 		}
 
 	}

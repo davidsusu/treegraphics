@@ -29,8 +29,6 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	protected Color color;
 
 	protected boolean isExpired = true;
-
-	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
 	
 	final protected List<CachedState> dependents = new ArrayList<CachedState>();
 	
@@ -85,18 +83,32 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 
 	@Override
 	public ExpireEvent expireState() {
-		// TODO
-		return null;
+		ExpireEvent ev = new ExpireEvent(this);
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			dependent.expireState(ev);
+		}
+		for (CachedState dependent: dependents) {
+			dependent.onExpirationFinished(ev);
+		}
+		return ev;
 	}
-
+	
 	@Override
 	public void expireState(ExpireEvent ev) {
-		// TODO
+		isExpired = true;
+		ev.push(this);
+		for (CachedState dependent: dependents) {
+			dependent.expireState(ev);
+		}
+		ev.pop(this);
 	}
-
+	
 	@Override
 	public void onExpirationFinished(ExpireEvent ev) {
-		// TODO
+		for (CachedState dependent: dependents) {
+			dependent.onExpirationFinished(ev);
+		}
 	}
 
 	@Override
@@ -122,26 +134,6 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	@Override
 	public String toString() {
 		return "TestPoint("+xValue.get()+", "+yValue.get()+")";
-	}
-	
-
-	
-	
-	
-	// TODO: remove
-	
-	@Override
-	public void expireState_old() {
-		isExpired = true;
-		for (CachedState dependent: dependents) {
-			dependent.expireState_old(this);
-		}
-	}
-
-	@Override
-	public void expireState_old(CachedState cachedState) {
-		expiredDependencies.add(cachedState);
-		expireState_old();
 	}
 
 }

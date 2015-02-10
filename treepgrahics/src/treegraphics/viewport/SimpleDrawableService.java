@@ -27,6 +27,11 @@ public class SimpleDrawableService extends AbstractDrawableService {
 		}
 
 	}
+	
+	@Override
+	protected void onExpirationFinishedOnce(ExpireEvent ev) {
+		// TODO / FIXME
+	}
 
 	@Override
 	public void addDrawable(Drawable drawable) {
@@ -81,21 +86,6 @@ public class SimpleDrawableService extends AbstractDrawableService {
 		Collections.sort(affectedDrawables, new ZDrawableComparator());
 		return affectedDrawables;
 	}
-	
-	
-	
-	
-
-	// TODO: remove
-	
-	@Override
-	public void expireState_old(CachedState cachedState) {
-		expiredDependencies.add(cachedState);
-		expireState_old();
-	}
-	
-	
-	
 	
 	// FIXME: duplicated from IndexedStoreDrawableService
 	protected static class ZDrawableComparator implements Comparator<Drawable> {
