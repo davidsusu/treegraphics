@@ -122,19 +122,21 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 	}
 
 	@Override
-	public void expireState() {
-		isExpired = true;
-		for (CachedState dependent: dependents) {
-			dependent.expireState(this);
-		}
+	public ExpireEvent expireState() {
+		// TODO
+		return null;
 	}
-
+	
 	@Override
-	public void expireState(CachedState cachedState) {
-		expiredDependencies.add(cachedState);
-		expireState();
+	public void expireState(ExpireEvent ev) {
+		// TODO
 	}
-
+	
+	@Override
+	public void onExpirationFinished(ExpireEvent ev) {
+		// TODO
+	}
+	
 	@Override
 	public void registerDependent(CachedState cachedState) {
 		// FIXME
@@ -161,5 +163,27 @@ public class TestLine implements Drawable, TestMovableDrawable, Identified {
 	public String toString() {
 		return "TestLine(("+x1Value.get()+", "+y1Value.get()+"); ("+x2Value.get()+", "+y2Value.get()+"))";
 	}
+	
+	
+	
+	
+	
+	
+	// TODO: remove
+
+	@Override
+	public void expireState_old() {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			dependent.expireState_old(this);
+		}
+	}
+
+	@Override
+	public void expireState_old(CachedState cachedState) {
+		expiredDependencies.add(cachedState);
+		expireState_old();
+	}
+
 	
 }

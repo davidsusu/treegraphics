@@ -14,10 +14,34 @@ abstract public class AbstractDrawableService implements DrawableService {
 	protected final List<CachedState> dependents = new ArrayList<CachedState>();
 
 	@Override
-	public void expireState() {
+	public ExpireEvent expireState() {
+		ExpireEvent ev = new ExpireEvent(this);
 		isExpired = true;
 		for (CachedState dependent: dependents) {
-			dependent.expireState(this);
+			// FIXME
+			//dependent.expireState(ev);
+			dependent.expireState_old(this);
+		}
+		for (CachedState dependent: dependents) {
+			dependent.onExpirationFinished(ev);
+		}
+		return ev;
+	}
+
+	@Override
+	public void expireState(ExpireEvent ev) {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			// FIXME
+			//dependent.expireState(ev);
+			dependent.expireState_old(this);
+		}
+	}
+
+	@Override
+	public void onExpirationFinished(ExpireEvent ev) {
+		for (CachedState dependent: dependents) {
+			dependent.onExpirationFinished(ev);
 		}
 	}
 	
@@ -32,6 +56,24 @@ abstract public class AbstractDrawableService implements DrawableService {
 	@Override
 	public void unregisterDependent(CachedState cachedState) {
 		dependents.remove(cachedState);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// TODO: remove
+	
+	@Override
+	public void expireState_old() {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			dependent.expireState_old(this);
+		}
 	}
 	
 }

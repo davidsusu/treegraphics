@@ -12,20 +12,39 @@ abstract public class AbstractValue implements Value {
 	final protected List<CachedState> expiredDependencies = new ArrayList<CachedState>();
 	
 	final protected List<CachedState> dependents = new ArrayList<CachedState>();
-	
+
 	@Override
-	public void expireState() {
+	public ExpireEvent expireState() {
+		ExpireEvent ev = new ExpireEvent(this);
 		isExpired = true;
 		for (CachedState dependent: dependents) {
-			dependent.expireState(this);
+			// FIXME
+			//dependent.expireState(ev);
+			dependent.expireState_old(this);
+		}
+		for (CachedState dependent: dependents) {
+			dependent.onExpirationFinished(ev);
+		}
+		return ev;
+	}
+
+	@Override
+	public void expireState(ExpireEvent ev) {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			// FIXME
+			//dependent.expireState(ev);
+			dependent.expireState_old(this);
 		}
 	}
 
 	@Override
-	public void expireState(CachedState cachedState) {
-		expiredDependencies.add(cachedState);
-		expireState();
+	public void onExpirationFinished(ExpireEvent ev) {
+		for (CachedState dependent: dependents) {
+			dependent.onExpirationFinished(ev);
+		}
 	}
+	
 
 	@Override
 	public void registerDependent(CachedState cachedState) {
@@ -50,4 +69,24 @@ abstract public class AbstractValue implements Value {
 	
 	abstract protected void reload();
 
+	
+	
+	
+	
+	
+
+	// TODO: remove
+	@Override
+	public void expireState_old() {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			dependent.expireState_old(this);
+		}
+	}
+
+	@Override
+	public void expireState_old(CachedState cachedState) {
+		expiredDependencies.add(cachedState);
+		expireState_old();
+	}
 }

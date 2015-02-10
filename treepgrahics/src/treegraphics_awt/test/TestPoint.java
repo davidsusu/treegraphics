@@ -84,17 +84,19 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 	}
 
 	@Override
-	public void expireState() {
-		isExpired = true;
-		for (CachedState dependent: dependents) {
-			dependent.expireState(this);
-		}
+	public ExpireEvent expireState() {
+		// TODO
+		return null;
 	}
 
 	@Override
-	public void expireState(CachedState cachedState) {
-		expiredDependencies.add(cachedState);
-		expireState();
+	public void expireState(ExpireEvent ev) {
+		// TODO
+	}
+
+	@Override
+	public void onExpirationFinished(ExpireEvent ev) {
+		// TODO
 	}
 
 	@Override
@@ -122,4 +124,24 @@ public class TestPoint implements Drawable, TestMovableDrawable, Identified {
 		return "TestPoint("+xValue.get()+", "+yValue.get()+")";
 	}
 	
+
+	
+	
+	
+	// TODO: remove
+	
+	@Override
+	public void expireState_old() {
+		isExpired = true;
+		for (CachedState dependent: dependents) {
+			dependent.expireState_old(this);
+		}
+	}
+
+	@Override
+	public void expireState_old(CachedState cachedState) {
+		expiredDependencies.add(cachedState);
+		expireState_old();
+	}
+
 }

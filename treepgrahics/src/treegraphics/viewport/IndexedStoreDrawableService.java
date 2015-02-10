@@ -119,18 +119,6 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 	}
 	
 	@Override
-	public void expireState(CachedState cachedState) {
-		if (cachedState instanceof Drawable) {
-			Drawable drawable = (Drawable)cachedState;
-			if (store.hasItem(drawable)) {
-				store.updateItem(drawable);
-			}
-		}
-		expiredDependencies.add(cachedState);
-		expireState();
-	}
-
-	@Override
 	public void freeFromDependecies() {
 		for (Drawable drawable: store.getAll()) {
 			drawable.unregisterDependent(this);
@@ -181,6 +169,26 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		}
 		
 	}
+
+	
+	
+	
+	// TODO: remove
+	
+	@Override
+	public void expireState_old(CachedState cachedState) {
+		if (cachedState instanceof Drawable) {
+			Drawable drawable = (Drawable)cachedState;
+			if (store.hasItem(drawable)) {
+				store.updateItem(drawable);
+			}
+		}
+		expiredDependencies.add(cachedState);
+		expireState_old();
+	}
+	
+	
+	
 	
 	protected class FakeDrawable implements Drawable {
 		
@@ -214,13 +222,21 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 		}
 
 		@Override
-		public void expireState() {
+		public ExpireEvent expireState() {
+			// TODO
+			return null;
 		}
 
 		@Override
-		public void expireState(CachedState cachedState) {
+		public void expireState(ExpireEvent ev) {
+			// TODO
 		}
 
+		@Override
+		public void onExpirationFinished(ExpireEvent ev) {
+			// TODO
+		}
+		
 		@Override
 		public void registerDependent(CachedState cachedState) {
 		}
@@ -238,6 +254,18 @@ public class IndexedStoreDrawableService extends AbstractDrawableService {
 			return "FakeDrawable("+point1+"; "+point2+")";
 		}
 		
+		
+		
+		
+		// TODO: remove
+		@Override
+		public void expireState_old() {
+		}
+
+		@Override
+		public void expireState_old(CachedState cachedState) {
+		}
+
 	}
 
 }

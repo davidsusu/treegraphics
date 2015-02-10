@@ -14,13 +14,12 @@ import treegraphics.util.CachedState;
 public class SimpleDrawableService extends AbstractDrawableService {
 
 	List<Drawable> drawables = new ArrayList<Drawable>();
-	
-	@Override
-	public void expireState(CachedState cachedState) {
-		expiredDependencies.add(cachedState);
-		expireState();
-	}
 
+	@Override
+	public void expireState(ExpireEvent ev) {
+		// TODO
+	}
+	
 	@Override
 	public void freeFromDependecies() {
 		for (Drawable drawable: drawables) {
@@ -82,6 +81,21 @@ public class SimpleDrawableService extends AbstractDrawableService {
 		Collections.sort(affectedDrawables, new ZDrawableComparator());
 		return affectedDrawables;
 	}
+	
+	
+	
+	
+
+	// TODO: remove
+	
+	@Override
+	public void expireState_old(CachedState cachedState) {
+		expiredDependencies.add(cachedState);
+		expireState_old();
+	}
+	
+	
+	
 	
 	// FIXME: duplicated from IndexedStoreDrawableService
 	protected static class ZDrawableComparator implements Comparator<Drawable> {
